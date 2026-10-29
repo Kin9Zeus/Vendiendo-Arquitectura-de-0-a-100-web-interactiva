@@ -4,6 +4,7 @@ import Base from '../../layouts/Base.astro';
 import Arrow from '../../components/Arrow.astro';
 import { CHAPTERS, BOOK, chapterNum, type Chapter } from '../../data/book';
 import { whatsappLink } from '../../config/site';
+import { href } from '../../config/site';
 
 export const getStaticPaths = (() =>
   CHAPTERS.map((c, i) => ({
@@ -53,8 +54,8 @@ const wa = whatsappLink(`Hola, me interesa el libro «${BOOK.title}», en especi
     <div class="wrap">
       <nav aria-label="Ruta de navegación">
         <ol class="crumbs">
-          <li><a href="/">Inicio</a></li>
-          <li><a href="/capitulos">Capítulos</a></li>
+          <li><a href={href('/')}>Inicio</a></li>
+          <li><a href={href('/capitulos')}>Capítulos</a></li>
           <li aria-current="page">Capítulo {c.n}</li>
         </ol>
       </nav>
@@ -78,7 +79,7 @@ const wa = whatsappLink(`Hola, me interesa el libro «${BOOK.title}», en especi
         </p>
         <div class="hero__ctas" data-reveal>
           <a class="btn" href={wa} target="_blank" rel="noopener" data-magnetic>Quiero el libro <Arrow /></a>
-          <a class="btn btn--ghost" href="/#indice">Volver al índice</a>
+          <a class="btn btn--ghost" href={href('/#indice')}>Volver al índice</a>
         </div>
       </div>
       <div>
@@ -91,10 +92,10 @@ const wa = whatsappLink(`Hola, me interesa el libro «${BOOK.title}», en especi
     <div class="wrap">
       <nav class="pager" aria-label="Capítulos vecinos">
         {prev ? (
-          <a href={`/capitulos/${prev.slug}`} rel="prev"><small>← Capítulo {chapterNum(prev.n)}</small><b>{prev.title}</b></a>
+          <a href={href(`/capitulos/${prev.slug}`)} rel="prev"><small>← Capítulo {chapterNum(prev.n)}</small><b>{prev.title}</b></a>
         ) : <span></span>}
         {next && (
-          <a class="next" href={`/capitulos/${next.slug}`} rel="next"><small>Capítulo {chapterNum(next.n)} →</small><b>{next.title}</b></a>
+          <a class="next" href={href(`/capitulos/${next.slug}`)} rel="next"><small>Capítulo {chapterNum(next.n)} →</small><b>{next.title}</b></a>
         )}
       </nav>
     </div>

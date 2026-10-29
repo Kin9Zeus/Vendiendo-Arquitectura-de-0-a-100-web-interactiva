@@ -6,6 +6,8 @@
 
 *Estrategias reales en un mundo y gremio que se sofoca económicamente por no tener un método.*
 
+**[▶ Ver la vista previa en vivo](https://kin9zeus.github.io/Vendiendo-Arquitectura-de-0-a-100-web-interactiva/)**
+
 ![Astro](https://img.shields.io/badge/Astro-7-141416?style=flat-square&logo=astro&logoColor=A07CE6)
 ![GSAP](https://img.shields.io/badge/GSAP-ScrollTrigger_·_SplitText-141416?style=flat-square&logo=greensock&logoColor=A07CE6)
 ![Node.js](https://img.shields.io/badge/Node.js-22-141416?style=flat-square&logo=nodedotjs&logoColor=A07CE6)
@@ -14,6 +16,7 @@
 ![Gemini](https://img.shields.io/badge/Gemini-RAG-141416?style=flat-square&logo=googlegemini&logoColor=A07CE6)
 ![CSP](https://img.shields.io/badge/CSP-hash--based-141416?style=flat-square&logoColor=A07CE6)
 ![Tests](https://img.shields.io/badge/tests-node%3Atest-141416?style=flat-square&logo=nodedotjs&logoColor=A07CE6)
+[![Vista previa](https://github.com/Kin9Zeus/Vendiendo-Arquitectura-de-0-a-100-web-interactiva/actions/workflows/pages.yml/badge.svg)](https://github.com/Kin9Zeus/Vendiendo-Arquitectura-de-0-a-100-web-interactiva/actions/workflows/pages.yml)
 
 </div>
 
@@ -187,6 +190,10 @@ npm test           # pruebas del asistente
 npm run kb:build   # reconstruye la base cifrada (requiere el PDF original, no incluido)
 ```
 
+### Vista previa en GitHub Pages
+
+Cada push a `main` ejecuta las pruebas y publica una versión estática en **[https://kin9zeus.github.io/Vendiendo-Arquitectura-de-0-a-100-web-interactiva](https://kin9zeus.github.io/Vendiendo-Arquitectura-de-0-a-100-web-interactiva/)** mediante GitHub Actions (`.github/workflows/pages.yml`). Se compila con la subcarpeta del repositorio (`BASE_PATH`) y en modo vista previa (`PUBLIC_PREVIEW=true`): no se indexa en buscadores y el asistente con IA aparece desactivado, porque Pages no ejecuta el servidor. La versión completa vive en Railway.
+
 ### Despliegue en Railway
 
 El repositorio incluye `Dockerfile` y `railway.json` (healthcheck en `/healthz`). Variables del servicio:
@@ -207,6 +214,7 @@ El repositorio incluye `Dockerfile` y `railway.json` (healthcheck en `/healthz`)
 
 | Versión | Fecha | Cambios |
 |---|---|---|
+| **1.1.1** | Oct 2026 | Vista previa pública en GitHub Pages con despliegue automático, rutas compatibles con subcarpeta y ajuste del menú en escritorio estrecho. |
 | **1.1.0** | Oct 2026 | Asistente «Pregúntale al libro» con IA (RAG sobre base cifrada, streaming, límites de uso y seguridad), políticas de privacidad, términos y cookies, sitio sin almacenamiento en el navegador y suite de pruebas. |
 | **1.0.0** | Oct 2026 | Lanzamiento: sitio completo con 23 páginas, sistema de diseño del libro, animaciones de scroll, servidor endurecido, SEO/GEO y despliegue en Railway. |
 

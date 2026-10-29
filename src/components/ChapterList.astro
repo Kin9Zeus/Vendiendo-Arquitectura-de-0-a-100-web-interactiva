@@ -1,6 +1,7 @@
 ---
 import type { Chapter } from '../data/book';
 import { chapterNum } from '../data/book';
+import { href } from '../config/site';
 
 interface Props { chapters: Chapter[]; headingLevel?: 'h3' | 'h2' }
 const { chapters, headingLevel = 'h3' } = Astro.props;
@@ -10,7 +11,7 @@ const H = headingLevel;
 <ol class="toc" role="list" data-toc>
   {chapters.map((c) => (
     <li class="toc__row" data-toc-row>
-      <a class="toc__link" href={`/capitulos/${c.slug}`}>
+      <a class="toc__link" href={href(`/capitulos/${c.slug}`)}>
         <span class="toc__num" aria-hidden="true">{chapterNum(c.n)}</span>
         <H class="toc__name">
           <span class="sr-only">Capítulo {c.n}: </span>{c.title}

@@ -1,5 +1,5 @@
 ---
-import { whatsappLink } from '../config/site';
+import { whatsappLink, href, IS_PREVIEW } from '../config/site';
 ---
 
 <button class="chat-launch" type="button" data-chat-open aria-haspopup="dialog" aria-controls="chat">
@@ -8,7 +8,7 @@ import { whatsappLink } from '../config/site';
   <span class="chat-launch__ai" aria-hidden="true">IA</span>
 </button>
 
-<dialog class="chat" id="chat" aria-labelledby="chat-title" aria-describedby="chat-desc" data-chat data-wa={whatsappLink()}>
+<dialog class="chat" id="chat" aria-labelledby="chat-title" aria-describedby="chat-desc" data-chat data-wa={whatsappLink()} data-base={href('/')} data-preview={IS_PREVIEW ? 'true' : undefined}>
   <header class="chat__head">
     <div class="chat__heading">
       <p class="chat__kicker">Asistente con IA · solo sobre el libro</p>
@@ -45,8 +45,8 @@ import { whatsappLink } from '../config/site';
     <label class="chat__check">
       <input type="checkbox" data-chat-accept />
       <span>
-        Tengo 18 años o más y acepto los <a href="/terminos#asistente" target="_blank" rel="noopener">Términos de uso</a>
-        y la <a href="/privacidad#asistente" target="_blank" rel="noopener">Política de privacidad</a>, incluida la transferencia
+        Tengo 18 años o más y acepto los <a href={href('/terminos#asistente')} target="_blank" rel="noopener">Términos de uso</a>
+        y la <a href={href('/privacidad#asistente')} target="_blank" rel="noopener">Política de privacidad</a>, incluida la transferencia
         internacional de mis mensajes a Google para generar las respuestas.
       </span>
     </label>

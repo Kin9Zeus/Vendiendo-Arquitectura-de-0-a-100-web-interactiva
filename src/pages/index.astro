@@ -5,7 +5,7 @@ import Book3D from '../components/Book3D.astro';
 import Arrow from '../components/Arrow.astro';
 import ChapterList from '../components/ChapterList.astro';
 import authorImg from '../assets/author.jpg';
-import { SITE, CONTACT, whatsappLink } from '../config/site';
+import { SITE, CONTACT, whatsappLink, href } from '../config/site';
 import { BOOK, CHAPTERS, FINDINGS, LADDER, STATS, PEOPLE, AUTHOR_BIO, FAQ, chapterNum } from '../data/book';
 
 const site = Astro.site!;
@@ -169,7 +169,7 @@ const glyphs: Record<string, string> = {
             const ch = CHAPTERS.find((c) => c.n === f.ch)!;
             return (
               <li>
-                <a class="card" href={`/capitulos/${ch.slug}`} data-card>
+                <a class="card" href={href(`/capitulos/${ch.slug}`)} data-card>
                   <span class="card__corner card__corner--tl" aria-hidden="true"></span>
                   <span class="card__corner card__corner--br" aria-hidden="true"></span>
                   <span class="card__top"><b>{f.k}</b><span>Cap. {chapterNum(f.ch)}</span></span>

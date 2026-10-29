@@ -1,5 +1,5 @@
 ---
-import { whatsappLink } from '../config/site';
+import { whatsappLink, href } from '../config/site';
 
 const links = [
   { href: '/#manifiesto', label: 'El libro' },
@@ -13,13 +13,13 @@ const links = [
 
 <header class="nav" data-nav>
   <div class="wrap nav__inner">
-    <a class="nav__brand" href="/" aria-label="Inicio · Vendiendo arquitectura de 0 a 100">
+    <a class="nav__brand" href={href('/')} aria-label="Inicio · Vendiendo arquitectura de 0 a 100">
       <span class="logo-mask" aria-hidden="true"></span>
       <span>Vendiendo arquitectura<span class="sr-only"> de 0 a 100</span></span>
     </a>
     <nav aria-label="Principal">
       <ul class="nav__links">
-        {links.map((l) => <li><a href={l.href} data-navlink>{l.label}</a></li>)}
+        {links.map((l) => <li><a href={href(l.href)} data-navlink>{l.label}</a></li>)}
       </ul>
     </nav>
     <a class="btn nav__cta" href={whatsappLink()} target="_blank" rel="noopener" data-magnetic>
@@ -34,7 +34,7 @@ const links = [
 <div class="menu" id="menu" data-menu>
   <nav aria-label="Menú móvil">
     <ol>
-      {links.map((l) => <li><a href={l.href} data-menu-link>{l.label}</a></li>)}
+      {links.map((l) => <li><a href={href(l.href)} data-menu-link>{l.label}</a></li>)}
     </ol>
   </nav>
   <div class="menu__foot">

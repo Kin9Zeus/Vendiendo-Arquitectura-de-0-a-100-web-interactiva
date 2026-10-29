@@ -3,12 +3,12 @@
   "short_name": "Vendiendo arq.",
   "description": "El libro de Sebastián Arias Duque · Editorial UVA",
   "lang": "es",
-  "start_url": "/",
+  "start_url": "./",
   "display": "standalone",
   "background_color": "#141416",
   "theme_color": "#141416",
   "icons": [
-    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
   ]
 }

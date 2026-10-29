@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import { LEGAL } from '../config/site';
+import { href } from '../config/site';
 ---
 
 <Base
@@ -130,13 +131,13 @@ import { LEGAL } from '../config/site';
       <h2 id="seguridad">10. Seguridad</h2>
       <p>
         Conexión cifrada (HTTPS con HSTS), política de seguridad de contenidos estricta, servidor sin estado, claves de servicio solo en el servidor, límites de uso,
-        minimización automática de datos personales y ausencia de almacenamiento de conversaciones. Ningún sistema es infalible; si detectas una vulnerabilidad, escríbenos (ver <a href="/.well-known/security.txt">security.txt</a>).
+        minimización automática de datos personales y ausencia de almacenamiento de conversaciones. Ningún sistema es infalible; si detectas una vulnerabilidad, escríbenos (ver <a href={href('/.well-known/security.txt')}>security.txt</a>).
       </p>
 
       <h2 id="cambios">11. Cambios a esta política</h2>
       <p>Si cambiamos esta política, publicaremos la nueva versión aquí con su fecha. Los cambios sustanciales se informarán en el sitio antes de aplicarse.</p>
 
-      <p class="legal__links">Ver también: <a href="/terminos">Términos de uso</a> · <a href="/cookies">Política de cookies</a></p>
+      <p class="legal__links">Ver también: <a href={href('/terminos')}>Términos de uso</a> · <a href={href('/cookies')}>Política de cookies</a></p>
     </div>
   </section>
 </Base>

@@ -2,6 +2,7 @@
 import Base from '../../layouts/Base.astro';
 import ChapterList from '../../components/ChapterList.astro';
 import { CHAPTERS, BOOK } from '../../data/book';
+import { href } from '../../config/site';
 
 const site = Astro.site!;
 const url = (p: string) => new URL(p, site).href;
@@ -35,7 +36,7 @@ const schema = [
     <div class="wrap">
       <nav aria-label="Ruta de navegación">
         <ol class="crumbs">
-          <li><a href="/">Inicio</a></li>
+          <li><a href={href('/')}>Inicio</a></li>
           <li aria-current="page">Capítulos</li>
         </ol>
       </nav>

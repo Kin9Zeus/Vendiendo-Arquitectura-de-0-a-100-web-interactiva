@@ -1,5 +1,5 @@
 ---
-import { CONTACT, whatsappLink } from '../config/site';
+import { CONTACT, whatsappLink, href } from '../config/site';
 import { BOOK } from '../data/book';
 const year = new Date().getFullYear();
 ---
@@ -16,10 +16,10 @@ const year = new Date().getFullYear();
       <nav aria-label="Pie de página">
         <h2>El libro</h2>
         <ul>
-          <li><a href="/#contenido">Lo que encontrarás</a></li>
-          <li><a href="/capitulos">Índice de capítulos</a></li>
-          <li><a href="/#autor">Sobre el autor</a></li>
-          <li><a href="/#preguntas">Preguntas frecuentes</a></li>
+          <li><a href={href('/#contenido')}>Lo que encontrarás</a></li>
+          <li><a href={href('/capitulos')}>Índice de capítulos</a></li>
+          <li><a href={href('/#autor')}>Sobre el autor</a></li>
+          <li><a href={href('/#preguntas')}>Preguntas frecuentes</a></li>
         </ul>
       </nav>
       <div>
@@ -35,7 +35,7 @@ const year = new Date().getFullYear();
     <div class="footer__legal">
       <span>© {year} {BOOK.author} · Unidad Vectorial de Arquitectura S.A.S. Todos los derechos reservados.</span>
       <nav class="footer__legal-links" aria-label="Legal">
-        <a href="/privacidad">Privacidad y datos</a> · <a href="/terminos">Términos de uso</a> · <a href="/cookies">Cookies</a> · Hecho en Pereira, Colombia
+        <a href={href('/privacidad')}>Privacidad y datos</a> · <a href={href('/terminos')}>Términos de uso</a> · <a href={href('/cookies')}>Cookies</a> · Hecho en Pereira, Colombia
       </nav>
     </div>
   </div>

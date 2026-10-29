@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import { LEGAL } from '../config/site';
+import { href } from '../config/site';
 ---
 
 <Base
@@ -33,7 +34,7 @@ import { LEGAL } from '../config/site';
         <li><strong>Uso aceptable.</strong> No está permitido: intentar eludir sus reglas o límites (incluida la manipulación de instrucciones o «prompt injection»), usarlo de forma automatizada o con herramientas de extracción, intentar obtener el texto del libro, introducir contenido ilícito, ofensivo o datos personales de terceros, ni afectar la disponibilidad del servicio.</li>
         <li><strong>Solo texto.</strong> No acepta ni genera archivos, imágenes ni documentos.</li>
         <li><strong>Límites.</strong> Hay un número máximo de preguntas por persona y por día, y límites de longitud y frecuencia. Podemos ajustarlos, suspender el acceso ante usos abusivos o desactivar el asistente temporalmente sin previo aviso.</li>
-        <li><strong>Privacidad.</strong> La conversación no se guarda y se borra al cerrar o recargar la página. Detalles en la <a href="/privacidad#asistente">Política de privacidad</a>.</li>
+        <li><strong>Privacidad.</strong> La conversación no se guarda y se borra al cerrar o recargar la página. Detalles en la <a href={href('/privacidad#asistente')}>Política de privacidad</a>.</li>
         <li><strong>Respuestas.</strong> Puedes usar las respuestas para tu estudio personal. No las presentes como textos del autor ni como citas literales del libro.</li>
       </ol>
 
@@ -59,7 +60,7 @@ import { LEGAL } from '../config/site';
       <h2 id="cambios">8. Cambios</h2>
       <p>Podemos actualizar estos términos. La versión vigente es la publicada en esta página con su fecha.</p>
 
-      <p class="legal__links">Ver también: <a href="/privacidad">Política de privacidad</a> · <a href="/cookies">Política de cookies</a></p>
+      <p class="legal__links">Ver también: <a href={href('/privacidad')}>Política de privacidad</a> · <a href={href('/cookies')}>Política de cookies</a></p>
     </div>
   </section>
 </Base>

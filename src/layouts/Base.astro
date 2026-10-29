@@ -13,7 +13,7 @@ import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import Ruler from '../components/Ruler.astro';
 import ChatAssistant from '../components/ChatAssistant.astro';
-import { SITE, CONTACT } from '../config/site';
+import { SITE, CONTACT, href, IS_PREVIEW } from '../config/site';
 import { BOOK } from '../data/book';
 
 interface Props {
@@ -33,9 +33,9 @@ const {
   title,
   description = SITE.description,
   path = Astro.url.pathname,
-  image = '/og.jpg',
+  image = href('/og.jpg'),
   imageAlt = `Portada del libro ${BOOK.title} de ${BOOK.author}`,
-  noindex = false,
+  noindex = IS_PREVIEW,
   ogType = 'website',
   schema = [],
   preloader = false,
@@ -44,7 +44,9 @@ const {
 
 const site = Astro.site ?? new URL('https://www.vendiendoarquitectura.com');
 const fullTitle = title ? `${title} · ${SITE.shortName}` : `${SITE.name} — ${BOOK.author} · Editorial UVA`;
-const cleanPath = path === '/' ? '/' : path.replace(/\/$/, '').replace(/\.html$/, '');
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const withBase = base && !path.startsWith(`${base}/`) && path !== base ? href(path) : path;
+const cleanPath = withBase === '/' ? '/' : withBase.replace(/\/$/, '').replace(/\.html$/, '') || '/';
 const canonical = new URL(cleanPath, site).href;
 const ogImage = new URL(image, site).href;
 
@@ -106,12 +108,12 @@ const jsonLd = JSON.stringify([...baseSchema, ...schema]).replace(/</g, '\\u003c
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
 
-    <link rel="icon" href="/favicon.ico" sizes="32x32" />
-    <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png" />
-    <link rel="apple-touch-icon" href="/icons/icon-180.png" />
-    <link rel="manifest" href="/manifest.webmanifest" />
-    <link rel="sitemap" href="/sitemap-index.xml" />
-    <link rel="alternate" type="text/plain" title="Resumen para IA" href="/llms.txt" />
+    <link rel="icon" href={href('/favicon.ico')} sizes="32x32" />
+    <link rel="icon" type="image/png" sizes="192x192" href={href('/icons/icon-192.png')} />
+    <link rel="apple-touch-icon" href={href('/icons/icon-180.png')} />
+    <link rel="manifest" href={href('/manifest.webmanifest')} />
+    <link rel="sitemap" href={href('/sitemap-index.xml')} />
+    <link rel="alternate" type="text/plain" title="Resumen para IA" href={href('/llms.txt')} />
 
     <script type="application/ld+json" set:html={jsonLd} />
 

@@ -9,6 +9,7 @@
 type Turn = { role: 'user' | 'model'; text: string; sig?: string };
 type Source = { n: number; title: string; slug: string };
 
+const BASE = (import.meta.env.BASE_URL || '/').replace(/\/$/, '');
 const MAX_TURNS = 24; // 12 intercambios por conversación (el servidor admite hasta 26)
 const $ = <T extends Element = HTMLElement>(s: string, r: ParentNode = document) => r.querySelector<T>(s);
 
@@ -140,7 +141,7 @@ function sourcesRow(sources: Source[]) {
   sources.forEach((s, i) => {
     if (i) row.append(document.createTextNode(' · '));
     const a = document.createElement('a');
-    a.href = `/capitulos/${encodeURIComponent(s.slug)}`;
+    a.href = `${BASE}/capitulos/${encodeURIComponent(s.slug)}`;
     a.target = '_blank';
     a.rel = 'noopener';
     a.textContent = `Cap. ${String(s.n).padStart(2, '0')}`;
@@ -155,7 +156,7 @@ function notice(text: string, cta = false) {
   if (cta) {
     const a = document.createElement('a');
     a.className = 'btn chat__cta';
-    a.href = dialog.dataset.wa || '/#comprar';
+    a.href = dialog.dataset.wa || `${BASE}/#comprar`;
     a.target = '_blank';
     a.rel = 'noopener';
     a.textContent = 'Pedir el libro por WhatsApp';
@@ -211,8 +212,16 @@ function resetConversation() {
 
 /* ---------------- red ---------------- */
 async function refreshStatus() {
+  if (dialog.dataset.preview) {
+    // Vista previa estática (GitHub Pages): no hay servidor para la IA
+    state.enabled = false;
+    consent.hidden = true;
+    form.hidden = true;
+    if (!log.querySelector('.chat__msg--notice')) notice('Esta es una vista previa del sitio: el asistente con IA funciona en la versión publicada. Mientras tanto, puedes pedir el libro por WhatsApp.', true);
+    return;
+  }
   try {
-    const r = await fetch('/api/chat/status', { headers: { Accept: 'application/json' }, cache: 'no-store' });
+    const r = await fetch(`${BASE}/api/chat/status`, { headers: { Accept: 'application/json' }, cache: 'no-store' });
     if (!r.ok) throw new Error(String(r.status));
     const s = await r.json();
     state.enabled = Boolean(s.enabled);
@@ -279,7 +288,7 @@ async function ask(question: string) {
   let sources: Source[] = [];
 
   try {
-    const res = await fetch('/api/chat', {
+    const res = await fetch(`${BASE}/api/chat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Accept: 'text/event-stream' },
       body: JSON.stringify({ sid: state.sid, message: text, history: state.history }),

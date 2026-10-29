@@ -802,7 +802,7 @@ html.motion [data-reveal] { opacity: 0; transform: translateY(28px); }
   .nav, .ruler, .cursor, .preloader, .marquee, .progress-top { display: none !important; }
   body { background: #fff; color: #000; }
 }
-:root { --logo: url("/brand/logo-uva.png"); }
+:root { --logo: url("../brand/logo-uva.png"); } /* relativo a /_astro/: funciona con y sin subcarpeta */
 .footer__motto { margin-top: 1.2rem; max-width: 34ch; }
 .manifesto__note { margin-top: 2.2rem; font-size: var(--step-0); max-width: 52ch; }
 .closing__lead { margin-top: 2rem; max-width: 46ch; }
@@ -844,3 +844,11 @@ html.motion [data-reveal] { opacity: 0; transform: translateY(28px); }
 .legal__links { margin-top: 3rem; padding-top: 1.2rem; border-top: 1px solid var(--rule); }
 @media (max-width: 600px) { .legal__toc ol { columns: 1; } }
 .footer__legal-links a { text-decoration: none; }
+
+/* menú: sin cortes de línea en escritorio estrecho */
+.nav__links a, .nav__brand span, .nav__cta { white-space: nowrap; }
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .nav__links { gap: 1.2rem; }
+  .nav__links a { font-size: 0.82rem; }
+  .nav__brand > span:not(.logo-mask) { display: none; }
+}

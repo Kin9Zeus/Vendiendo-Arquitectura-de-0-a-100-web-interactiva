@@ -39,6 +39,13 @@ export const LEGAL = {
   version: '2.0',
 } as const;
 
+/** Subcarpeta de publicación (GitHub Pages usa /<repo>/; producción usa /). */
+const BASE = (import.meta.env.BASE_URL || '/').replace(/\/$/, '');
+export const href = (path: string) => (path.startsWith('/') ? `${BASE}${path}` : path);
+
+/** Vista previa estática: sin indexación y sin asistente (no hay servidor). */
+export const IS_PREVIEW = import.meta.env.PUBLIC_PREVIEW === 'true';
+
 export const BUY_MESSAGE =
   'Hola, quiero el libro «Vendiendo arquitectura de 0 a 100». ¿Cómo lo consigo?';
 

@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Arrow from '../components/Arrow.astro';
+import { href } from '../config/site';
 ---
 
 <Base title="Página no encontrada" description="Esta página no está en los planos." noindex path="/404">
@@ -11,8 +12,8 @@ import Arrow from '../components/Arrow.astro';
         <h1>Esta página no está en los planos<span class="caret" aria-hidden="true"></span></h1>
         <p>La escala de este libro va de 0 a 100 y acabas de medir 404. Puede que el enlace esté mal escrito o que la página se haya movido.</p>
         <div class="lost__links">
-          <a class="btn" href="/" data-magnetic>Volver al inicio <Arrow /></a>
-          <a class="btn btn--ghost" href="/capitulos">Ver los capítulos</a>
+          <a class="btn" href={href('/')} data-magnetic>Volver al inicio <Arrow /></a>
+          <a class="btn btn--ghost" href={href('/capitulos')}>Ver los capítulos</a>
         </div>
       </div>
       <svg class="lost__svg" viewBox="0 0 520 300" role="img" aria-label="El número 404 dibujado como un plano acotado" data-draw>

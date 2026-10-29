@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import { LEGAL } from '../config/site';
+import { href } from '../config/site';
 ---
 
 <Base
@@ -39,7 +40,7 @@ import { LEGAL } from '../config/site';
       <h2>Cambios</h2>
       <p>Si en el futuro incorporamos analítica u otras herramientas que usen cookies no esenciales, actualizaremos esta política y te pediremos consentimiento antes de activarlas.</p>
 
-      <p class="legal__links">Ver también: <a href="/privacidad">Política de privacidad</a> · <a href="/terminos">Términos de uso</a></p>
+      <p class="legal__links">Ver también: <a href={href('/privacidad')}>Política de privacidad</a> · <a href={href('/terminos')}>Términos de uso</a></p>
     </div>
   </section>
 </Base>
