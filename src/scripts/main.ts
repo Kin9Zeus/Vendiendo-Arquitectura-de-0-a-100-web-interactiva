@@ -42,7 +42,6 @@ function initPreloader(): Promise<void> {
     const done = () => {
       root.classList.remove('is-loading');
       lenis?.start();
-      try { sessionStorage.setItem('va-intro', '1'); } catch { /* sin almacenamiento */ }
       resolve();
     };
     const safety = window.setTimeout(done, 4000);
@@ -439,10 +438,31 @@ function initDraw() {
 }
 
 /* ------------------------------------------------------------------ */
+/** Asistente del libro: el módulo se descarga solo cuando alguien lo abre. */
+function initChat() {
+  if (!document.querySelector('[data-chat]')) return;
+  let mod: Promise<typeof import('./chat')> | null = null;
+  const load = () => (mod ??= import('./chat'));
+  const launchers = document.querySelectorAll<HTMLElement>('[data-chat-open], [data-chat-ask]');
+  launchers.forEach((el) => {
+    el.addEventListener('click', async () => {
+      const { openChat } = await load();
+      openChat(el.dataset.chatAsk);
+    });
+    el.addEventListener('pointerenter', () => { load(); }, { once: true }); // precarga al acercarse
+  });
+  window.addEventListener('chat:toggle', (e) => {
+    const open = (e as CustomEvent<boolean>).detail;
+    if (open) lenis?.stop(); else lenis?.start();
+  });
+}
+
+/* ------------------------------------------------------------------ */
 async function boot() {
   initLenis();
   initRuler();
   initNav();
+  initChat();
 
   if (!motion) {
     initPaperTheme();

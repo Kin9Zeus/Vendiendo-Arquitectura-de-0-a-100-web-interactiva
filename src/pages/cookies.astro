@@ -1,0 +1,45 @@
+---
+import Base from '../layouts/Base.astro';
+import { LEGAL } from '../config/site';
+---
+
+<Base
+  title="Política de cookies"
+  description="Este sitio no usa cookies ni almacenamiento local en tu navegador."
+  path="/cookies"
+>
+  <section class="section ch-hero">
+    <div class="wrap prose legal">
+      <p class="eyebrow">Legal · versión {LEGAL.version}</p>
+      <h1>Política de cookies</h1>
+      <p>Vigente desde el {LEGAL.updated}.</p>
+
+      <div class="legal__summary">
+        <p><strong>Este sitio no usa cookies.</strong> Tampoco guarda información en tu navegador (localStorage, sessionStorage ni IndexedDB) ni carga scripts de terceros. Por eso no te mostramos un aviso de cookies.</p>
+      </div>
+
+      <h2>Qué usa el sitio</h2>
+      <div class="legal__table">
+        <table>
+          <thead><tr><th>Elemento</th><th>Para qué</th><th>Duración</th></tr></thead>
+          <tbody>
+            <tr><td>Memoria de la pestaña</td><td>Mantener la conversación con el asistente mientras la página está abierta.</td><td>Hasta cerrar o recargar la página.</td></tr>
+            <tr><td>Página de origen (referer) del navegador</td><td>Mostrar la animación de entrada solo cuando llegas desde otro sitio. No se guarda.</td><td>No se almacena.</td></tr>
+            <tr><td>Caché HTTP del navegador</td><td>Que las páginas, fuentes e imágenes carguen más rápido en visitas siguientes. No contiene datos personales.</td><td>Según la configuración de tu navegador.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Servicios externos</h2>
+      <p>
+        Las fuentes tipográficas e imágenes se sirven desde nuestro propio servidor: no hay Google Fonts, píxeles ni redes publicitarias. Si haces clic en WhatsApp o Instagram
+        saldrás a esos servicios, que aplican sus propias políticas de cookies.
+      </p>
+
+      <h2>Cambios</h2>
+      <p>Si en el futuro incorporamos analítica u otras herramientas que usen cookies no esenciales, actualizaremos esta política y te pediremos consentimiento antes de activarlas.</p>
+
+      <p class="legal__links">Ver también: <a href="/privacidad">Política de privacidad</a> · <a href="/terminos">Términos de uso</a></p>
+    </div>
+  </section>
+</Base>

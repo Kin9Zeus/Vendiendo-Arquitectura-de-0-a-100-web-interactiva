@@ -1,0 +1,65 @@
+---
+import Base from '../layouts/Base.astro';
+import { LEGAL } from '../config/site';
+---
+
+<Base
+  title="Términos de uso"
+  description="Condiciones de uso del sitio del libro y de su asistente con inteligencia artificial."
+  path="/terminos"
+>
+  <section class="section ch-hero">
+    <div class="wrap prose legal">
+      <p class="eyebrow">Legal · versión {LEGAL.version}</p>
+      <h1>Términos de uso</h1>
+      <p>Vigentes desde el {LEGAL.updated}. Al usar este sitio aceptas estos términos. Si no estás de acuerdo, no lo uses.</p>
+
+      <h2 id="titular">1. Titular</h2>
+      <p>Este sitio lo opera <strong>{LEGAL.company}</strong> ({LEGAL.brand}), {LEGAL.nit}, {LEGAL.address}. Contacto: <a href={`mailto:${LEGAL.email}`}>{LEGAL.email}</a>.</p>
+
+      <h2 id="propiedad">2. Propiedad intelectual</h2>
+      <p>
+        El libro «Vendiendo arquitectura de 0 a 100», sus textos, imágenes, cubierta y fragmentos pertenecen a sus autores y a {LEGAL.company}. Las marcas UVA, UVA Arquitectura
+        y Editorial UVA son de su titular. El diseño y el código del sitio están protegidos. Se permite consultar el sitio para uso personal; se prohíbe copiar, reproducir,
+        extraer de forma sistemática o redistribuir el contenido del libro, incluido el obtenido a través del asistente, sin autorización escrita.
+      </p>
+
+      <h2 id="asistente">3. Asistente con inteligencia artificial</h2>
+      <ol>
+        <li><strong>Qué es.</strong> Un asistente automatizado que usa un modelo de lenguaje de Google (Gemini API) y fragmentos del libro para explicar su contenido. Estás interactuando con una IA, no con el autor ni con una persona.</li>
+        <li><strong>Edad.</strong> Solo pueden usarlo personas de 18 años o más.</li>
+        <li><strong>Alcance.</strong> Responde únicamente sobre el contenido del libro. No es un servicio de consultoría ni un asistente de propósito general.</li>
+        <li><strong>No es asesoría profesional.</strong> Las respuestas son informativas y pueden contener errores u omisiones. No constituyen asesoría legal, contable, tributaria, laboral, financiera ni técnica. Verifica la información y consulta a un profesional antes de tomar decisiones.</li>
+        <li><strong>Uso aceptable.</strong> No está permitido: intentar eludir sus reglas o límites (incluida la manipulación de instrucciones o «prompt injection»), usarlo de forma automatizada o con herramientas de extracción, intentar obtener el texto del libro, introducir contenido ilícito, ofensivo o datos personales de terceros, ni afectar la disponibilidad del servicio.</li>
+        <li><strong>Solo texto.</strong> No acepta ni genera archivos, imágenes ni documentos.</li>
+        <li><strong>Límites.</strong> Hay un número máximo de preguntas por persona y por día, y límites de longitud y frecuencia. Podemos ajustarlos, suspender el acceso ante usos abusivos o desactivar el asistente temporalmente sin previo aviso.</li>
+        <li><strong>Privacidad.</strong> La conversación no se guarda y se borra al cerrar o recargar la página. Detalles en la <a href="/privacidad#asistente">Política de privacidad</a>.</li>
+        <li><strong>Respuestas.</strong> Puedes usar las respuestas para tu estudio personal. No las presentes como textos del autor ni como citas literales del libro.</li>
+      </ol>
+
+      <h2 id="compras">4. Compra del libro</h2>
+      <p>
+        El sitio no procesa pagos. La compra se acuerda por WhatsApp o correo, donde se informan precio, medios de pago, costos y tiempos de envío antes de cerrar la venta.
+        Como consumidor en Colombia tienes los derechos del Estatuto del Consumidor (Ley 1480 de 2011), incluido el derecho de retracto en ventas a distancia dentro de los
+        cinco (5) días hábiles siguientes a la entrega, en los términos del artículo 47 de esa ley. Si compras desde otro país, conservas los derechos imperativos que te otorgue su legislación.
+      </p>
+
+      <h2 id="terceros">5. Enlaces a terceros</h2>
+      <p>El sitio enlaza a servicios de terceros (WhatsApp, Instagram, sitio de UVA). Su uso se rige por las condiciones y políticas de cada proveedor.</p>
+
+      <h2 id="responsabilidad">6. Disponibilidad y responsabilidad</h2>
+      <p>
+        El sitio y el asistente se ofrecen «tal como están» y pueden tener interrupciones. En la medida permitida por la ley, no respondemos por daños derivados del uso de la
+        información del sitio o de las respuestas del asistente, ni por fallas de servicios de terceros. Nada en estos términos limita derechos que la ley no permita limitar.
+      </p>
+
+      <h2 id="ley">7. Ley aplicable</h2>
+      <p>Estos términos se rigen por las leyes de la República de Colombia. Las controversias se someterán a los jueces de Pereira, sin perjuicio de los derechos de los consumidores a acudir a la autoridad competente de su domicilio.</p>
+
+      <h2 id="cambios">8. Cambios</h2>
+      <p>Podemos actualizar estos términos. La versión vigente es la publicada en esta página con su fecha.</p>
+
+      <p class="legal__links">Ver también: <a href="/privacidad">Política de privacidad</a> · <a href="/cookies">Política de cookies</a></p>
+    </div>
+  </section>
+</Base>

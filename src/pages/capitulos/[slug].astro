@@ -58,7 +58,7 @@ const wa = whatsappLink(`Hola, me interesa el libro «${BOOK.title}», en especi
           <li aria-current="page">Capítulo {c.n}</li>
         </ol>
       </nav>
-      <header class="ch-block" data-ch-block>
+      <header class="ch-block" data-ch-block data-chapter-n={c.n}>
         <p class="ch-block__kicker">{c.isNew ? 'Nuevo en esta edición · Capítulo' : 'Capítulo'}</p>
         <p class="ch-block__num" aria-hidden="true">{chapterNum(c.n)}</p>
         <div class="ch-block__rule"></div>

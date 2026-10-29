@@ -53,6 +53,14 @@ const schema = [
   },
 ];
 
+const ASK_LIMIT = 25; // coincide con CHAT_DAILY_LIMIT por defecto
+const ASK_EXAMPLES = [
+  '¿Cuánto propone el libro cobrar por metro cuadrado de diseño?',
+  '¿Qué diferencia hay entre un contrato por AIU y uno de administración delegada?',
+  '¿Cómo limitar las correcciones sin perder al cliente?',
+  '¿Qué son los niveles LOD y cuál recomienda el libro entregar?',
+];
+
 const manifesto = [
   'La academia nos entrena para diseñar, para entender la norma, para conceptualizar un edificio.',
   'Pero el día que abrimos una oficina descubrimos que eso no basta:',
@@ -248,6 +256,37 @@ const glyphs: Record<string, string> = {
         <p class="lead muted" data-reveal>Diecinueve capítulos ordenados como se construye una oficina: primero la cabeza, luego la empresa, después el cliente y al final el dinero.</p>
       </div>
       <ChapterList chapters={CHAPTERS} />
+    </div>
+  </section>
+
+  <!-- ASISTENTE ------------------------------------------------------- -->
+  <section class="section ask" id="asistente" aria-labelledby="asistente-title">
+    <div class="wrap ask__grid">
+      <div>
+        <p class="eyebrow">Nuevo · Asistente con IA</p>
+        <h2 class="h-section" id="asistente-title" data-split>Pregúntale <span class="light">al libro</span><span class="caret" aria-hidden="true"></span></h2>
+        <p class="lead muted" data-reveal>¿Te quedó una duda sobre cotizar, contratos o finanzas? Un asistente que solo conoce este libro te explica sus ideas, te dice en qué capítulo están y cómo se conectan.</p>
+        <ul class="ask__facts" role="list" data-reveal>
+          <li>Responde solo sobre el libro</li>
+          <li>Solo texto</li>
+          <li>Se borra al cerrar la página</li>
+          <li>{ASK_LIMIT} preguntas al día</li>
+        </ul>
+        <button class="btn ask__open" type="button" data-chat-open data-magnetic>Abrir el asistente <Arrow /></button>
+      </div>
+      <div>
+        <p class="eyebrow eyebrow--plain">Empieza con una de estas</p>
+        <ul class="ask__list" role="list">
+          {ASK_EXAMPLES.map((q, i) => (
+            <li data-reveal>
+              <button class="ask__q" type="button" data-chat-ask={q}>
+                <b>{String(i + 1).padStart(2, '0')}</b><span>{q}</span>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6" /></svg>
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   </section>
 

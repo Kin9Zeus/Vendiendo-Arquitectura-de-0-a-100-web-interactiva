@@ -10,9 +10,11 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build && node scripts/precompress.mjs",
-    "preview": "npm run build && node server.mjs",
-    "start": "node server.mjs",
-    "assets": "python -I scripts/build_assets.py"
+    "preview": "npm run build && node --env-file-if-exists=.env server.mjs",
+    "start": "node --env-file-if-exists=.env server.mjs",
+    "assets": "python -I scripts/build_assets.py",
+    "kb:build": "python -W ignore scripts/kb_extract.py && node --env-file-if-exists=.env scripts/kb-build.mjs",
+    "test": "node --test \"test/*.test.mjs\""
   },
   "dependencies": {
     "sirv": "3.0.2"

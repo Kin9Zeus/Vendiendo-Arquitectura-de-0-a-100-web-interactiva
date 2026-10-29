@@ -1,0 +1,74 @@
+---
+import { whatsappLink } from '../config/site';
+---
+
+<button class="chat-launch" type="button" data-chat-open aria-haspopup="dialog" aria-controls="chat">
+  <span class="chat-launch__dot" aria-hidden="true"></span>
+  <span class="chat-launch__label">Pregúntale al libro</span>
+  <span class="chat-launch__ai" aria-hidden="true">IA</span>
+</button>
+
+<dialog class="chat" id="chat" aria-labelledby="chat-title" aria-describedby="chat-desc" data-chat data-wa={whatsappLink()}>
+  <header class="chat__head">
+    <div class="chat__heading">
+      <p class="chat__kicker">Asistente con IA · solo sobre el libro</p>
+      <h2 class="chat__title" id="chat-title">Pregúntale al libro<span class="caret" aria-hidden="true"></span></h2>
+    </div>
+    <div class="chat__tools">
+      <button class="chat__icon" type="button" data-chat-reset aria-label="Empezar una conversación nueva" title="Nueva conversación">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.3-5.6M4 4v4h4" /></svg>
+      </button>
+      <button class="chat__icon" type="button" data-chat-close aria-label="Cerrar el asistente" title="Cerrar">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="chat__log" data-chat-log role="log" aria-live="polite" aria-relevant="additions" tabindex="0" data-lenis-prevent>
+    <div class="chat__intro">
+      <p id="chat-desc">
+        Pregunta lo que quieras sobre <em>Vendiendo arquitectura de 0 a 100</em>: ideas, capítulos, conceptos o cómo se relacionan.
+        Respondo solo con lo que dice el libro.
+      </p>
+      <ul class="chat__suggest" data-chat-suggest role="list"></ul>
+    </div>
+  </div>
+
+  <section class="chat__consent" data-chat-consent aria-label="Condiciones de uso del asistente">
+    <p class="chat__consent-title">Antes de empezar</p>
+    <ul class="chat__facts" role="list">
+      <li>Estás hablando con una <strong>inteligencia artificial</strong>, no con el autor.</li>
+      <li>La conversación vive solo en esta pestaña: <strong>se borra al cerrar o recargar</strong>. No la guardamos.</li>
+      <li>Para responder, tus preguntas se envían a Google (Gemini API, EE. UU.). No escribas datos personales.</li>
+      <li>Puede equivocarse y no es asesoría legal, contable ni financiera.</li>
+    </ul>
+    <label class="chat__check">
+      <input type="checkbox" data-chat-accept />
+      <span>
+        Tengo 18 años o más y acepto los <a href="/terminos#asistente" target="_blank" rel="noopener">Términos de uso</a>
+        y la <a href="/privacidad#asistente" target="_blank" rel="noopener">Política de privacidad</a>, incluida la transferencia
+        internacional de mis mensajes a Google para generar las respuestas.
+      </span>
+    </label>
+    <button class="btn chat__start" type="button" data-chat-start disabled>Empezar a preguntar</button>
+  </section>
+
+  <form class="chat__form" data-chat-form hidden novalidate>
+    <div class="chat__field">
+      <label class="sr-only" for="chat-input">Tu pregunta sobre el libro</label>
+      <textarea id="chat-input" rows="1" maxlength="600" autocomplete="off" spellcheck="true"
+        placeholder="Escribe tu pregunta sobre el libro…" data-chat-input></textarea>
+      <button class="chat__send" type="submit" data-chat-send aria-label="Enviar pregunta">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6" /></svg>
+      </button>
+      <button class="chat__stop" type="button" data-chat-stop hidden aria-label="Detener la respuesta">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="7" width="10" height="10" /></svg>
+      </button>
+    </div>
+    <p class="chat__meta">
+      <span class="mono" data-chat-count>0/600</span>
+      <span data-chat-quota></span>
+    </p>
+    <p class="chat__disclaimer">IA basada solo en el libro. Puede contener errores · Sin archivos ni imágenes.</p>
+  </form>
+</dialog>

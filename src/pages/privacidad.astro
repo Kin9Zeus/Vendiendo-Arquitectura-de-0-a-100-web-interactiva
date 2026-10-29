@@ -1,40 +1,142 @@
 ---
 import Base from '../layouts/Base.astro';
-import { CONTACT } from '../config/site';
-const updated = '28 de octubre de 2026';
+import { LEGAL } from '../config/site';
 ---
 
-<Base title="Aviso de privacidad" description="Cómo trata este sitio los datos personales: sin cookies de seguimiento ni analítica de terceros." path="/privacidad">
+<Base
+  title="Política de privacidad y tratamiento de datos"
+  description="Cómo trata este sitio y su asistente con IA los datos personales, conforme a la Ley 1581 de 2012 de Colombia y al RGPD."
+  path="/privacidad"
+>
   <section class="section ch-hero">
-    <div class="wrap prose">
-      <p class="eyebrow">Legal</p>
-      <h1>Aviso de privacidad</h1>
-      <p>Última actualización: {updated}.</p>
+    <div class="wrap prose legal">
+      <p class="eyebrow">Legal · versión {LEGAL.version}</p>
+      <h1>Política de privacidad y tratamiento de datos personales</h1>
+      <p>Vigente desde el {LEGAL.updated}.</p>
+
+      <div class="legal__summary">
+        <p><strong>En pocas palabras</strong></p>
+        <ul>
+          <li>No usamos cookies, píxeles de seguimiento ni analítica de terceros.</li>
+          <li>No hay registro de usuarios ni formularios que guarden tus datos.</li>
+          <li>El asistente con IA no guarda tus conversaciones: viven solo en tu pestaña y se borran al cerrarla o recargarla.</li>
+          <li>Para responder, tus preguntas se envían a Google (Gemini API), que actúa como encargado y no las usa para entrenar sus modelos.</li>
+          <li>Puedes ejercer tus derechos escribiendo a <a href={`mailto:${LEGAL.email}`}>{LEGAL.email}</a>.</li>
+        </ul>
+      </div>
+
+      <nav aria-label="Contenido" class="legal__toc">
+        <ol>
+          <li><a href="#responsable">Responsable</a></li>
+          <li><a href="#marco">Marco legal</a></li>
+          <li><a href="#datos">Datos que tratamos y para qué</a></li>
+          <li><a href="#asistente">Asistente con IA</a></li>
+          <li><a href="#bases">Bases legales</a></li>
+          <li><a href="#encargados">Encargados y transferencias internacionales</a></li>
+          <li><a href="#conservacion">Conservación</a></li>
+          <li><a href="#derechos">Tus derechos y cómo ejercerlos</a></li>
+          <li><a href="#menores">Menores de edad y datos sensibles</a></li>
+          <li><a href="#seguridad">Seguridad</a></li>
+          <li><a href="#cambios">Cambios a esta política</a></li>
+        </ol>
+      </nav>
+
+      <h2 id="responsable">1. Responsable del tratamiento</h2>
       <p>
-        Este sitio presenta el libro «Vendiendo arquitectura de 0 a 100» y es operado por Unidad Vectorial de Arquitectura S.A.S.
-        (UVA Arquitectura), con domicilio en {CONTACT.city}, Colombia. Tratamos los datos personales conforme a la Ley 1581 de 2012
-        y el Decreto 1377 de 2013.
+        <strong>{LEGAL.company}</strong> ({LEGAL.brand}), {LEGAL.nit}, con domicilio en {LEGAL.address}.
+        Correo: <a href={`mailto:${LEGAL.email}`}>{LEGAL.email}</a> · Teléfono: {LEGAL.phone}.
       </p>
 
-      <h2>Qué datos recogemos</h2>
+      <h2 id="marco">2. Marco legal</h2>
+      <p>
+        Tratamos los datos conforme a la Ley Estatutaria 1581 de 2012 y el Decreto 1377 de 2013 (compilado en el Decreto 1074 de 2015) de Colombia.
+        Cuando el sitio lo usan personas en el Espacio Económico Europeo, Reino Unido o Suiza, aplicamos también el Reglamento General de Protección de Datos (RGPD) y sus equivalentes;
+        para residentes de California, la CCPA/CPRA; y, en general, la normativa de protección de datos del país del usuario cuando sea aplicable.
+      </p>
+
+      <h2 id="datos">3. Datos que tratamos y para qué</h2>
+      <div class="legal__table">
+        <table>
+          <thead><tr><th>Actividad</th><th>Datos</th><th>Finalidad</th></tr></thead>
+          <tbody>
+            <tr><td>Visitar el sitio</td><td>Datos técnicos de la conexión (dirección IP, navegador, página solicitada), procesados por el servidor de forma transitoria.</td><td>Entregar las páginas y proteger el sitio frente a abusos. Nuestros registros operativos no guardan IP ni contenido.</td></tr>
+            <tr><td>Usar el asistente con IA</td><td>El texto de tus preguntas y el historial de la conversación abierta.</td><td>Generar respuestas sobre el contenido del libro.</td></tr>
+            <tr><td>Límites de uso del asistente</td><td>Un seudónimo diario calculado a partir de tu IP y tu navegador mediante una función criptográfica con una clave que cambia cada día.</td><td>Aplicar el límite diario de preguntas y prevenir abusos. No permite recuperar tu IP.</td></tr>
+            <tr><td>Escribirnos por WhatsApp o correo</td><td>Los datos que decidas enviarnos (nombre, teléfono, correo, ciudad).</td><td>Atender tu solicitud sobre el libro (disponibilidad, precio, envío).</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>No vendemos ni alquilamos datos personales, no hacemos publicidad personalizada y no elaboramos perfiles.</p>
+
+      <h2 id="asistente">4. Asistente con inteligencia artificial</h2>
       <ul>
-        <li>Este sitio no usa cookies de seguimiento, píxeles publicitarios ni herramientas de analítica de terceros.</li>
-        <li>No hay formularios: no pedimos ni guardamos tu nombre, correo ni teléfono en este sitio.</li>
-        <li>El servidor registra datos técnicos mínimos de cada solicitud (ruta, código de respuesta y hora) para mantener el servicio seguro y estable. Estos registros se conservan por un tiempo limitado.</li>
-        <li>El navegador guarda en la sesión una marca para no repetir la animación de entrada. No sale de tu dispositivo y se borra al cerrar la pestaña.</li>
+        <li><strong>Es una IA.</strong> Las respuestas las genera automáticamente un modelo de lenguaje de Google (Gemini API) a partir de fragmentos del libro. No es el autor ni una persona.</li>
+        <li><strong>Sin almacenamiento.</strong> La conversación se guarda solo en la memoria de tu pestaña. No usamos cookies, localStorage, sessionStorage ni bases de datos para ella. Al cerrar o recargar la página desaparece.</li>
+        <li><strong>Minimización.</strong> Antes de enviar tu pregunta, el servidor oculta automáticamente correos electrónicos, teléfonos y números de tarjeta. Aun así, no escribas datos personales tuyos ni de terceros.</li>
+        <li><strong>Consentimiento.</strong> Para usarlo debes confirmar que tienes 18 años o más y aceptar esta política, incluida la transferencia internacional de tus preguntas a Google. Puedes retirar tu consentimiento en cualquier momento cerrando el asistente; no queda nada guardado.</li>
+        <li><strong>Sin decisiones automatizadas con efectos jurídicos.</strong> El asistente solo explica el libro; no toma decisiones sobre ti.</li>
       </ul>
 
-      <h2>WhatsApp y correo</h2>
+      <h2 id="bases">5. Bases legales</h2>
+      <ul>
+        <li><strong>Consentimiento</strong> (art. 9 de la Ley 1581 de 2012; art. 6.1.a RGPD): uso del asistente y transferencia internacional de las preguntas.</li>
+        <li><strong>Interés legítimo y seguridad</strong> (art. 6.1.f RGPD): datos técnicos y seudónimos para proteger el servicio y controlar su costo.</li>
+        <li><strong>Atención de tu solicitud</strong> (art. 6.1.b RGPD): cuando nos escribes para conseguir el libro.</li>
+      </ul>
+
+      <h2 id="encargados">6. Encargados y transferencias internacionales</h2>
+      <div class="legal__table">
+        <table>
+          <thead><tr><th>Proveedor</th><th>Servicio</th><th>Ubicación</th></tr></thead>
+          <tbody>
+            <tr><td>Google LLC</td><td>Gemini API (plan de pago) para generar las respuestas del asistente. Según sus términos, no usa estos datos para mejorar sus productos y conserva temporalmente las solicitudes solo para detectar abusos.</td><td>Estados Unidos</td></tr>
+            <tr><td>Railway Corporation</td><td>Alojamiento del sitio y del servidor.</td><td>Estados Unidos</td></tr>
+            <tr><td>GoDaddy</td><td>Registro del dominio y DNS.</td><td>Estados Unidos</td></tr>
+            <tr><td>Meta Platforms (WhatsApp)</td><td>Solo si eliges escribirnos por WhatsApp.</td><td>Estados Unidos / UE</td></tr>
+          </tbody>
+        </table>
+      </div>
       <p>
-        Si escribes por WhatsApp o por correo, los datos que compartas los recibe UVA Arquitectura para responder tu solicitud
-        sobre el libro. WhatsApp es un servicio de Meta con su propia política de privacidad.
+        Estas transferencias a Estados Unidos se realizan con tu consentimiento expreso (art. 26 de la Ley 1581 de 2012) y con las garantías contractuales que ofrecen los proveedores
+        (acuerdos de tratamiento de datos y, para usuarios del EEE, cláusulas contractuales tipo o el Marco de Privacidad de Datos UE-EE. UU. cuando aplique).
       </p>
 
-      <h2>Tus derechos</h2>
+      <h2 id="conservacion">7. Conservación</h2>
+      <ul>
+        <li>Conversaciones del asistente: no las conservamos. Google puede conservarlas por un periodo limitado únicamente para prevenir abusos, según sus términos.</li>
+        <li>Seudónimos de uso: en memoria del servidor hasta la medianoche (hora de Colombia); luego se descartan junto con la clave del día.</li>
+        <li>Registros técnicos del servidor (sin IP ni contenido): el tiempo que los retenga el proveedor de alojamiento, como máximo 30 días.</li>
+        <li>Mensajes por WhatsApp o correo: mientras gestionamos tu solicitud y el tiempo exigido por obligaciones legales o contables.</li>
+      </ul>
+
+      <h2 id="derechos">8. Tus derechos y cómo ejercerlos</h2>
       <p>
-        Puedes conocer, actualizar, rectificar o pedir que eliminemos tus datos, y revocar tu autorización, escribiendo a
-        <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>. Respondemos en los plazos que fija la ley.
+        Como titular puedes conocer, actualizar, rectificar y suprimir tus datos; solicitar prueba de la autorización; ser informado sobre su uso; revocar la autorización;
+        y presentar quejas ante la Superintendencia de Industria y Comercio (SIC) una vez agotado el trámite ante nosotros. Si aplica el RGPD, también tienes derecho de acceso,
+        limitación, oposición, portabilidad y a reclamar ante tu autoridad de control. Si aplica la CCPA, tienes derecho a saber, eliminar y no ser discriminado; no vendemos ni compartimos datos con fines publicitarios.
       </p>
+      <p>
+        Escríbenos a <a href={`mailto:${LEGAL.email}`}>{LEGAL.email}</a> indicando tu nombre, la solicitud y un medio de respuesta.
+        Respondemos las <strong>consultas</strong> en un máximo de 10 días hábiles (prorrogables 5) y los <strong>reclamos</strong> en 15 días hábiles (prorrogables 8),
+        según los artículos 14 y 15 de la Ley 1581 de 2012. Como no guardamos las conversaciones ni datos que te identifiquen en el asistente, normalmente no tendremos información tuya de ese servicio.
+      </p>
+
+      <h2 id="menores">9. Menores de edad y datos sensibles</h2>
+      <p>
+        El sitio no está dirigido a menores y el asistente es exclusivo para mayores de 18 años. No solicitamos datos sensibles (salud, origen, creencias, biometría, etc.);
+        no los escribas en el asistente. Si detectamos datos de menores, los eliminamos.
+      </p>
+
+      <h2 id="seguridad">10. Seguridad</h2>
+      <p>
+        Conexión cifrada (HTTPS con HSTS), política de seguridad de contenidos estricta, servidor sin estado, claves de servicio solo en el servidor, límites de uso,
+        minimización automática de datos personales y ausencia de almacenamiento de conversaciones. Ningún sistema es infalible; si detectas una vulnerabilidad, escríbenos (ver <a href="/.well-known/security.txt">security.txt</a>).
+      </p>
+
+      <h2 id="cambios">11. Cambios a esta política</h2>
+      <p>Si cambiamos esta política, publicaremos la nueva versión aquí con su fecha. Los cambios sustanciales se informarán en el sitio antes de aplicarse.</p>
+
+      <p class="legal__links">Ver también: <a href="/terminos">Términos de uso</a> · <a href="/cookies">Política de cookies</a></p>
     </div>
   </section>
 </Base>

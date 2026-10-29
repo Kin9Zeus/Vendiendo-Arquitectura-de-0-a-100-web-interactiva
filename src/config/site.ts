@@ -27,6 +27,18 @@ export const CONTACT = {
   country: 'CO',
 } as const;
 
+/** Datos del responsable del tratamiento (documentos legales). Confirmar NIT y dirección. */
+export const LEGAL = {
+  company: 'Unidad Vectorial de Arquitectura S.A.S.',
+  brand: 'UVA Arquitectura · Editorial UVA',
+  nit: 'NIT por confirmar',
+  address: 'Calle 19 # 9-50, Edificio Diario del Otún, oficina 1208, Pereira, Risaralda, Colombia',
+  email: 'arquitecturauva@gmail.com',
+  phone: '+57 300 520 3788',
+  updated: '28 de octubre de 2026',
+  version: '2.0',
+} as const;
+
 export const BUY_MESSAGE =
   'Hola, quiero el libro «Vendiendo arquitectura de 0 a 100». ¿Cómo lo consigo?';
 

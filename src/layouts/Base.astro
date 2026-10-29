@@ -7,10 +7,12 @@ import '@fontsource/poppins/latin-700.css';
 import '@fontsource/lora/latin-400-italic.css';
 import 'lenis/dist/lenis.css';
 import '../styles/global.css';
+import '../styles/chat.css';
 
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import Ruler from '../components/Ruler.astro';
+import ChatAssistant from '../components/ChatAssistant.astro';
 import { SITE, CONTACT } from '../config/site';
 import { BOOK } from '../data/book';
 
@@ -119,9 +121,10 @@ const jsonLd = JSON.stringify([...baseSchema, ...schema]).replace(/</g, '\\u003c
         d.classList.add('js');
         var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches && !/[?&]motion=1/.test(location.search);
         if (!reduce) d.classList.add('motion');
-        var seen = false;
-        try { seen = sessionStorage.getItem('va-intro') === '1'; } catch (e) {}
-        if (d.dataset.preloader === 'on' && !reduce && !seen) d.classList.add('is-loading');
+        // Sin almacenamiento: la precarga solo aparece al llegar desde fuera del sitio
+        var internal = false;
+        try { internal = !!document.referrer && new URL(document.referrer).origin === location.origin; } catch (e) {}
+        if (d.dataset.preloader === 'on' && !reduce && !internal) d.classList.add('is-loading');
       })();
     </script>
     <slot name="head" />
@@ -142,6 +145,7 @@ const jsonLd = JSON.stringify([...baseSchema, ...schema]).replace(/</g, '\\u003c
       <slot />
     </main>
     <Footer />
+    <ChatAssistant />
     <div class="cursor" aria-hidden="true">
       <span class="cursor__h"></span><span class="cursor__v"></span>
       <span class="cursor__ring"></span><span class="cursor__xy mono"></span>

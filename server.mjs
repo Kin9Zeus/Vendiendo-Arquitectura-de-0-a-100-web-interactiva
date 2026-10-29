@@ -5,13 +5,15 @@
  *  - brotli/gzip precomprimidos (scripts/precompress.mjs)
  *  - redirecciones canónicas (HTTPS, host, sin barra final, sin .html)
  *  - 404 personalizada y /healthz para el healthcheck
- * Sin estado, sin cookies, sin dependencias aparte de sirv.
+ *  - /api/chat: asistente del libro (server/chat/)
+ * Sin cookies ni sesiones persistentes; única dependencia: sirv.
  */
 import { createServer } from 'node:http';
 import { readFileSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { join, dirname } from 'node:path';
 import sirv from 'sirv';
+import { createChat } from './server/chat/handler.mjs';
 
 const ROOT = dirname(fileURLToPath(import.meta.url));
 const DIST = join(ROOT, 'dist');
@@ -29,6 +31,7 @@ if (!existsSync(join(DIST, 'index.html'))) {
   console.error('dist/ no existe. Ejecuta «npm run build» antes de «npm start».');
   process.exit(1);
 }
+const chat = createChat();
 const NOT_FOUND = readFileSync(join(DIST, '404.html'));
 const NOT_FOUND_BR = existsSync(join(DIST, '404.html.br')) ? readFileSync(join(DIST, '404.html.br')) : null;
 
@@ -99,13 +102,18 @@ const server = createServer((req, res) => {
     if (IS_PROD) console.log(`${req.method} ${req.url?.split('?')[0]} ${res.statusCode} ${Date.now() - started}ms`);
   });
 
+  let url;
+  try { url = new URL(req.url || '/', 'http://localhost'); } catch { res.writeHead(400); return res.end(); }
+
+  if (url.pathname.startsWith('/api/')) {
+    res.setHeader('X-Robots-Tag', 'noindex');
+    return void chat.handle(req, res, url.pathname);
+  }
+
   if (req.method !== 'GET' && req.method !== 'HEAD') {
     res.writeHead(405, { Allow: 'GET, HEAD' });
     return res.end();
   }
-
-  let url;
-  try { url = new URL(req.url || '/', 'http://localhost'); } catch { res.writeHead(400); return res.end(); }
 
   if (url.pathname === '/healthz') {
     res.writeHead(200, { 'Content-Type': 'text/plain', 'Cache-Control': 'no-store' });
