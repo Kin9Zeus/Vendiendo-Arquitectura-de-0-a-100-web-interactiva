@@ -1,0 +1,153 @@
+---
+import '@fontsource/poppins/latin-300.css';
+import '@fontsource/poppins/latin-400.css';
+import '@fontsource/poppins/latin-500.css';
+import '@fontsource/poppins/latin-600.css';
+import '@fontsource/poppins/latin-700.css';
+import '@fontsource/lora/latin-400-italic.css';
+import 'lenis/dist/lenis.css';
+import '../styles/global.css';
+
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import Ruler from '../components/Ruler.astro';
+import { SITE, CONTACT } from '../config/site';
+import { BOOK } from '../data/book';
+
+interface Props {
+  title?: string;
+  description?: string;
+  path?: string;
+  image?: string;
+  imageAlt?: string;
+  noindex?: boolean;
+  ogType?: 'website' | 'book' | 'article';
+  schema?: Record<string, unknown>[];
+  preloader?: boolean;
+  paper?: boolean;
+}
+
+const {
+  title,
+  description = SITE.description,
+  path = Astro.url.pathname,
+  image = '/og.jpg',
+  imageAlt = `Portada del libro ${BOOK.title} de ${BOOK.author}`,
+  noindex = false,
+  ogType = 'website',
+  schema = [],
+  preloader = false,
+  paper = false,
+} = Astro.props;
+
+const site = Astro.site ?? new URL('https://www.vendiendoarquitectura.com');
+const fullTitle = title ? `${title} · ${SITE.shortName}` : `${SITE.name} — ${BOOK.author} · Editorial UVA`;
+const cleanPath = path === '/' ? '/' : path.replace(/\/$/, '').replace(/\.html$/, '');
+const canonical = new URL(cleanPath, site).href;
+const ogImage = new URL(image, site).href;
+
+const orgId = new URL('/#editorial', site).href;
+const baseSchema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    '@id': new URL('/#website', site).href,
+    url: site.href,
+    name: SITE.name,
+    inLanguage: 'es',
+    publisher: { '@id': orgId },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    '@id': orgId,
+    name: 'UVA Arquitectura · Editorial UVA',
+    legalName: 'Unidad Vectorial de Arquitectura S.A.S.',
+    url: CONTACT.web,
+    logo: new URL('/icons/icon-512.png', site).href,
+    email: CONTACT.email,
+    foundingDate: '2016',
+    address: { '@type': 'PostalAddress', addressLocality: CONTACT.city, addressRegion: CONTACT.region, addressCountry: CONTACT.country },
+    sameAs: [CONTACT.instagram, CONTACT.web],
+  },
+];
+const jsonLd = JSON.stringify([...baseSchema, ...schema]).replace(/</g, '\\u003c');
+---
+
+<!doctype html>
+<html lang="es" class:list={[{ 'is-paper': paper }]} data-preloader={preloader ? 'on' : 'off'}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="robots" content={noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large, max-snippet:-1'} />
+    <meta name="author" content={BOOK.author} />
+    <meta name="theme-color" content={SITE.themeColor} />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:locale" content={SITE.locale} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={imageAlt} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png" />
+    <link rel="apple-touch-icon" href="/icons/icon-180.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="alternate" type="text/plain" title="Resumen para IA" href="/llms.txt" />
+
+    <script type="application/ld+json" set:html={jsonLd} />
+
+    <script is:inline>
+      (function () {
+        var d = document.documentElement;
+        d.classList.add('js');
+        var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches && !/[?&]motion=1/.test(location.search);
+        if (!reduce) d.classList.add('motion');
+        var seen = false;
+        try { seen = sessionStorage.getItem('va-intro') === '1'; } catch (e) {}
+        if (d.dataset.preloader === 'on' && !reduce && !seen) d.classList.add('is-loading');
+      })();
+    </script>
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="skip-link" href="#contenido-principal">Saltar al contenido</a>
+    {preloader && (
+      <div class="preloader" aria-hidden="true">
+        <span class="preloader__num"><span data-pre-num>000</span><span class="caret"></span></span>
+        <span class="preloader__label">Vendiendo arquitectura · de 0 a 100</span>
+        <span class="preloader__bar" data-pre-bar></span>
+      </div>
+    )}
+    <div class="progress-top" aria-hidden="true"></div>
+    <Ruler />
+    <Nav />
+    <main id="contenido-principal" tabindex="-1">
+      <slot />
+    </main>
+    <Footer />
+    <div class="cursor" aria-hidden="true">
+      <span class="cursor__h"></span><span class="cursor__v"></span>
+      <span class="cursor__ring"></span><span class="cursor__xy mono"></span>
+    </div>
+    <script>
+      import '../scripts/main';
+    </script>
+  </body>
+</html>

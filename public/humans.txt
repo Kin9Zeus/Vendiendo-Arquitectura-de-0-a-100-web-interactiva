@@ -1,0 +1,8 @@
+/* EQUIPO */
+Autor: Sebastián Arias Duque
+Editorial: Editorial UVA · UVA Arquitectura
+Ubicación: Pereira, Colombia
+
+/* SITIO */
+Stack: Astro, GSAP, Lenis, Node.js
+Hosting: Railway

@@ -1,0 +1,52 @@
+---
+import Base from '../../layouts/Base.astro';
+import ChapterList from '../../components/ChapterList.astro';
+import { CHAPTERS, BOOK } from '../../data/book';
+
+const site = Astro.site!;
+const url = (p: string) => new URL(p, site).href;
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: `Índice de ${BOOK.title}`,
+    numberOfItems: CHAPTERS.length,
+    itemListElement: CHAPTERS.map((c) => ({ '@type': 'ListItem', position: c.n, name: c.title, url: url(`/capitulos/${c.slug}`) })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Inicio', item: url('/') },
+      { '@type': 'ListItem', position: 2, name: 'Capítulos', item: url('/capitulos') },
+    ],
+  },
+];
+---
+
+<Base
+  title="Índice de capítulos"
+  description={`Los 19 capítulos de «${BOOK.title}»: apertura de oficina, cotización, contratos, entregables BIM, correcciones, visualización, mercadeo, marca, finanzas e inteligencia artificial para arquitectos.`}
+  path="/capitulos"
+  schema={schema}
+  paper
+>
+  <section class="section ch-hero">
+    <div class="wrap">
+      <nav aria-label="Ruta de navegación">
+        <ol class="crumbs">
+          <li><a href="/">Inicio</a></li>
+          <li aria-current="page">Capítulos</li>
+        </ol>
+      </nav>
+      <div class="section-head section-head--split">
+        <div>
+          <p class="eyebrow">{BOOK.collection} · {BOOK.volume}</p>
+          <h1 class="h-section toc__title" data-split>Índice<span class="caret" aria-hidden="true"></span></h1>
+        </div>
+        <p class="lead muted">Diecinueve capítulos, {BOOK.pages} páginas. Cada uno con su resumen y sus ideas clave.</p>
+      </div>
+      <ChapterList chapters={CHAPTERS} headingLevel="h2" />
+    </div>
+  </section>
+</Base>

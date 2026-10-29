@@ -1,0 +1,16 @@
+# dependencias y build
+node_modules/
+dist/
+.astro/
+
+# entorno
+.env
+.env.*
+!.env.example
+
+# sistema / editores
+.DS_Store
+Thumbs.db
+*.log
+.vscode/
+.idea/

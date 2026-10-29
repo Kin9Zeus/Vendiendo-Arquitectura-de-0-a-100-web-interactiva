@@ -1,0 +1,40 @@
+---
+import Base from '../layouts/Base.astro';
+import { CONTACT } from '../config/site';
+const updated = '28 de octubre de 2026';
+---
+
+<Base title="Aviso de privacidad" description="Cómo trata este sitio los datos personales: sin cookies de seguimiento ni analítica de terceros." path="/privacidad">
+  <section class="section ch-hero">
+    <div class="wrap prose">
+      <p class="eyebrow">Legal</p>
+      <h1>Aviso de privacidad</h1>
+      <p>Última actualización: {updated}.</p>
+      <p>
+        Este sitio presenta el libro «Vendiendo arquitectura de 0 a 100» y es operado por Unidad Vectorial de Arquitectura S.A.S.
+        (UVA Arquitectura), con domicilio en {CONTACT.city}, Colombia. Tratamos los datos personales conforme a la Ley 1581 de 2012
+        y el Decreto 1377 de 2013.
+      </p>
+
+      <h2>Qué datos recogemos</h2>
+      <ul>
+        <li>Este sitio no usa cookies de seguimiento, píxeles publicitarios ni herramientas de analítica de terceros.</li>
+        <li>No hay formularios: no pedimos ni guardamos tu nombre, correo ni teléfono en este sitio.</li>
+        <li>El servidor registra datos técnicos mínimos de cada solicitud (ruta, código de respuesta y hora) para mantener el servicio seguro y estable. Estos registros se conservan por un tiempo limitado.</li>
+        <li>El navegador guarda en la sesión una marca para no repetir la animación de entrada. No sale de tu dispositivo y se borra al cerrar la pestaña.</li>
+      </ul>
+
+      <h2>WhatsApp y correo</h2>
+      <p>
+        Si escribes por WhatsApp o por correo, los datos que compartas los recibe UVA Arquitectura para responder tu solicitud
+        sobre el libro. WhatsApp es un servicio de Meta con su propia política de privacidad.
+      </p>
+
+      <h2>Tus derechos</h2>
+      <p>
+        Puedes conocer, actualizar, rectificar o pedir que eliminemos tus datos, y revocar tu autorización, escribiendo a
+        <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>. Respondemos en los plazos que fija la ley.
+      </p>
+    </div>
+  </section>
+</Base>

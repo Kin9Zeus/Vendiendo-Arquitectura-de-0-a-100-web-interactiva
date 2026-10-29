@@ -1,0 +1,32 @@
+---
+import Base from '../layouts/Base.astro';
+import Arrow from '../components/Arrow.astro';
+---
+
+<Base title="Página no encontrada" description="Esta página no está en los planos." noindex path="/404">
+  <section class="lost">
+    <div class="wrap lost__grid">
+      <div>
+        <p class="eyebrow">Error 404 · Fuera de escala</p>
+        <h1>Esta página no está en los planos<span class="caret" aria-hidden="true"></span></h1>
+        <p>La escala de este libro va de 0 a 100 y acabas de medir 404. Puede que el enlace esté mal escrito o que la página se haya movido.</p>
+        <div class="lost__links">
+          <a class="btn" href="/" data-magnetic>Volver al inicio <Arrow /></a>
+          <a class="btn btn--ghost" href="/capitulos">Ver los capítulos</a>
+        </div>
+      </div>
+      <svg class="lost__svg" viewBox="0 0 520 300" role="img" aria-label="El número 404 dibujado como un plano acotado" data-draw>
+        <!-- 4 -->
+        <path class="digit" d="M110 40 L30 190 H150 M120 40 V250" />
+        <!-- 0 -->
+        <rect class="digit" x="200" y="40" width="120" height="210" rx="60" />
+        <!-- 4 -->
+        <path class="digit" d="M450 40 L370 190 H490 M460 40 V250" />
+        <!-- cotas -->
+        <path class="dimline" d="M30 280 H490 M30 272 V288 M490 272 V288" />
+        <path class="dimline" d="M508 40 V250 M500 40 H516 M500 250 H516" />
+        <text x="260" y="298" text-anchor="middle">404 / 100</text>
+      </svg>
+    </div>
+  </section>
+</Base>

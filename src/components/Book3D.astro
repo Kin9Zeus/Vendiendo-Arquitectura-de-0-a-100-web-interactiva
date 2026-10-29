@@ -1,0 +1,31 @@
+---
+import { Image } from 'astro:assets';
+import front from '../assets/book/front.jpg';
+import back from '../assets/book/back.jpg';
+import spine from '../assets/book/spine.jpg';
+
+interface Props {
+  id?: string;
+  priority?: boolean;
+  label?: string;
+}
+const { id, priority = false, label = 'Libro Vendiendo arquitectura de 0 a 100, tapa dura con sobrecubierta' } = Astro.props;
+const loading = priority ? 'eager' : 'lazy';
+---
+
+<div class="book-stage" data-book-stage>
+  <div class="book" id={id} data-book role="img" aria-label={label}>
+    <div class="book__face book__front">
+      <Image src={front} alt="" widths={[360, 540, 720]} sizes="(min-width: 1024px) 360px, 60vw" format="webp" quality={82} loading={loading} fetchpriority={priority ? 'high' : 'auto'} />
+    </div>
+    <div class="book__face book__back">
+      <Image src={back} alt="" widths={[360, 720]} sizes="(min-width: 1024px) 360px, 60vw" format="webp" quality={78} loading="lazy" />
+    </div>
+    <div class="book__face book__spine">
+      <Image src={spine} alt="" width={110} format="webp" quality={80} loading="lazy" />
+    </div>
+    <div class="book__pages"></div>
+    <div class="book__top"></div>
+  </div>
+  <span class="book-shadow" aria-hidden="true"></span>
+</div>

@@ -1,0 +1,16 @@
+---
+// Escalímetro de la cubierta convertido en indicador de lectura: 0 abajo, 100 arriba.
+const ticks = Array.from({ length: 21 }, (_, i) => i * 5);
+---
+
+<div class="ruler" aria-hidden="true" data-ruler>
+  <span class="ruler__end ruler__end--top">100</span>
+  <div class="ruler__track">
+    <span class="ruler__fill"></span>
+    {ticks.map((t) => (
+      <span class:list={['ruler__tick', { 'ruler__tick--major': t % 25 === 0 }]} data-tick={t}></span>
+    ))}
+    <span class="ruler__marker"><span class="ruler__value" data-ruler-value>000</span></span>
+  </div>
+  <span class="ruler__end ruler__end--bottom">0</span>
+</div>

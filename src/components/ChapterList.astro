@@ -1,0 +1,24 @@
+---
+import type { Chapter } from '../data/book';
+import { chapterNum } from '../data/book';
+
+interface Props { chapters: Chapter[]; headingLevel?: 'h3' | 'h2' }
+const { chapters, headingLevel = 'h3' } = Astro.props;
+const H = headingLevel;
+---
+
+<ol class="toc" role="list" data-toc>
+  {chapters.map((c) => (
+    <li class="toc__row" data-toc-row>
+      <a class="toc__link" href={`/capitulos/${c.slug}`}>
+        <span class="toc__num" aria-hidden="true">{chapterNum(c.n)}</span>
+        <H class="toc__name">
+          <span class="sr-only">Capítulo {c.n}: </span>{c.title}
+          {c.isNew && <span class="badge-new">Nuevo</span>}
+          {c.byline && <small>{c.byline}</small>}
+        </H>
+        <span class="toc__page">{c.page}</span>
+      </a>
+    </li>
+  ))}
+</ol>

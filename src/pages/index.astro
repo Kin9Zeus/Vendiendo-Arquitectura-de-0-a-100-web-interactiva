@@ -1,0 +1,371 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Book3D from '../components/Book3D.astro';
+import Arrow from '../components/Arrow.astro';
+import ChapterList from '../components/ChapterList.astro';
+import authorImg from '../assets/author.jpg';
+import { SITE, CONTACT, whatsappLink } from '../config/site';
+import { BOOK, CHAPTERS, FINDINGS, LADDER, STATS, PEOPLE, AUTHOR_BIO, FAQ, chapterNum } from '../data/book';
+
+const site = Astro.site!;
+const url = (p: string) => new URL(p, site).href;
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Book',
+    '@id': url('/#libro'),
+    name: BOOK.title,
+    alternateName: `${BOOK.collection}, ${BOOK.volume}: ${BOOK.title}`,
+    description: SITE.description,
+    url: url('/'),
+    image: url('/og.jpg'),
+    inLanguage: 'es',
+    author: { '@id': url('/#autor') },
+    publisher: { '@id': url('/#editorial') },
+    bookFormat: 'https://schema.org/Hardcover',
+    bookEdition: BOOK.edition,
+    numberOfPages: BOOK.pages,
+    isPartOf: { '@type': 'BookSeries', name: BOOK.collection },
+    genre: ['Arquitectura', 'Negocios', 'Emprendimiento', 'Mercadeo'],
+    about: ['Gestión de oficinas de arquitectura', 'Cotización de proyectos arquitectónicos', 'Mercadeo para arquitectos', 'Administración financiera', 'Inteligencia artificial aplicada a la arquitectura'],
+    audience: { '@type': 'Audience', audienceType: 'Arquitectos, diseñadores, constructores y estudiantes' },
+    contributor: PEOPLE.map((p) => ({ '@type': 'Person', name: p.name.replace('Arq. ', ''), description: p.role })),
+    hasPart: CHAPTERS.map((c) => ({ '@type': 'Chapter', position: c.n, name: c.title, pageStart: c.page, url: url(`/capitulos/${c.slug}`) })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    '@id': url('/#autor'),
+    name: BOOK.author,
+    jobTitle: 'Arquitecto · Director y CEO de UVA Arquitectura',
+    description: AUTHOR_BIO[0],
+    worksFor: { '@id': url('/#editorial') },
+    award: 'Segundo lugar, Concurso de Vivienda Colectiva ONU-Hábitat (2014)',
+    homeLocation: { '@type': 'Place', name: 'Pereira, Colombia' },
+    image: url('/og.jpg'),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: FAQ.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+  },
+];
+
+const manifesto = [
+  'La academia nos entrena para diseñar, para entender la norma, para conceptualizar un edificio.',
+  'Pero el día que abrimos una oficina descubrimos que eso no basta:',
+  'hay que cotizar, convencer, cobrar, sostener una nómina y sobrevivir a un mercado hostil, competido y en ocasiones mezquino.',
+  'Ese eslabón perdido de la profesión —cómo venderla— es el tema de este libro.',
+];
+
+// Escalera isométrica (capítulo 17)
+const bars = LADDER.map((l, i) => {
+  const x = 30 + i * 92;
+  const y = 372;
+  const h = 26 + l.level * 2.7;
+  const p = (dx: number, dy: number) => `${x + dx},${y + dy}`;
+  const t = (dx: number, dy: number) => `${x + dx},${y + dy - h}`;
+  return {
+    level: l.level,
+    left: [p(0, 0), p(40, 20), t(40, 20), t(0, 0)].join(' '),
+    right: [p(40, 20), p(80, 0), t(80, 0), t(40, 20)].join(' '),
+    top: [t(0, 0), t(40, 20), t(80, 0), t(40, -20)].join(' '),
+    lx: x + 40,
+    ly: y + 52,
+  };
+});
+
+const glyphs: Record<string, string> = {
+  Marca: '<rect x="50" y="18" width="84" height="84"/><rect x="72" y="40" width="40" height="40"/><path class="dim" d="M40 18v84M150 40v40"/><path d="M36 18h8M36 102h8M146 40h8M146 80h8"/>',
+  'Cotización': '<path d="M58 10h64l20 20v84H58z"/><path d="M122 10v20h20"/><path d="M72 46h52M72 58h40M72 70h46"/><rect x="72" y="84" width="40" height="14"/><path class="dim" d="M150 84v14"/>',
+  Entrega: '<path d="M40 86l58-24 62 24-60 26z"/><path d="M40 66l58-24 62 24-60 26z"/><path d="M40 46l58-24 62 24-60 26z"/><path class="dim" d="M24 46v40"/>',
+  'Visualización': '<path d="M26 60L120 22v76z"/><rect x="120" y="22" width="52" height="76"/><circle cx="26" cy="60" r="4"/><path class="dim" d="M26 60h146"/>',
+  Venta: '<path d="M24 22l70 38M24 98l70-38M24 60h70"/><circle cx="118" cy="60" r="22"/><circle cx="118" cy="60" r="6"/><path class="dim" d="M150 60h30"/>',
+  Creencias: '<path class="dim" d="M70 60a36 36 0 1 0 0-.1"/><path d="M106 60c26 0 30-34 70-34"/><path d="M168 18l8 8-8 8"/><circle cx="70" cy="60" r="5"/>',
+  'Decisión': '<path d="M100 14l-34 92M100 14l34 92"/><circle cx="100" cy="14" r="5"/><path d="M60 92a52 52 0 0 0 80 0"/><path class="dim" d="M66 106h68"/>',
+};
+---
+
+<Base preloader schema={schema}>
+  <!-- HERO ------------------------------------------------------------ -->
+  <section class="hero" id="inicio" aria-labelledby="hero-title" data-hero>
+    <div class="wrap hero__grid">
+      <div class="hero__copy">
+        <p>
+          <span class="hero__author" data-hero-kicker>{BOOK.author}</span>
+          <span class="hero__series" data-hero-kicker>{BOOK.collection} · {BOOK.volume} · {BOOK.edition}</span>
+        </p>
+        <h1 class="hero__title" id="hero-title">
+          <span class="line-mask"><span class="l" data-hero-line>Vendiendo</span></span>
+          <span class="line-mask"><span class="l" data-hero-line>arquitectura</span></span>
+          <span class="line-mask"><span class="l l--light" data-hero-line>de 0 a 100<span class="caret" aria-hidden="true"></span></span></span>
+        </h1>
+        <p class="lead hero__tagline" data-hero-fade>{SITE.tagline}</p>
+        <div class="hero__ctas" data-hero-fade>
+          <a class="btn" href={whatsappLink()} target="_blank" rel="noopener" data-magnetic>
+            Quiero el libro <Arrow />
+          </a>
+          <a class="btn btn--ghost" href="#indice">Ver el índice</a>
+        </div>
+      </div>
+      <div class="hero__visual" aria-hidden="false">
+        <span class="hero__ghost" aria-hidden="true" data-hero-ghost>100</span>
+        <svg class="hero__circle" viewBox="0 0 100 100" aria-hidden="true" data-hero-circle><circle cx="50" cy="50" r="49" /></svg>
+        <div data-hero-book>
+          <Book3D priority id="hero-book" />
+        </div>
+      </div>
+    </div>
+    <div class="wrap hero__meta">
+      <span class="scroll-cue"><i></i> Desliza · empieza en 0</span>
+      <span class="hero__coords mono">4°48′48″ N · 75°41′46″ O — Pereira</span>
+    </div>
+  </section>
+
+  <!-- MANIFIESTO -------------------------------------------------------- -->
+  <section class="section manifesto" id="manifiesto" aria-labelledby="manifiesto-title" data-manifesto>
+    <div class="manifesto__pin">
+      <div class="wrap manifesto__grid">
+        <div>
+          <p class="eyebrow">Contraportada</p>
+          <h2 class="manifesto__title" id="manifiesto-title">Nadie nos enseñó a vender arquitectura.</h2>
+          <p class="manifesto__text" data-words>
+            {manifesto.join(' ')}
+          </p>
+          <p class="lead muted manifesto__note">No es un manual de éxito lleno de aire: es la recopilación cruda de los aciertos y las fallas de una década consolidando una oficina en Colombia.</p>
+        </div>
+        <div class="manifesto__visual">
+          <Book3D id="manifesto-book" label="Contraportada del libro" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LO QUE ENCONTRARÁS ------------------------------------------------ -->
+  <section class="section findings" id="contenido" aria-labelledby="contenido-title" data-findings>
+    <div class="findings__pin">
+      <div class="wrap">
+        <div class="section-head section-head--split">
+          <div>
+            <p class="eyebrow">En sus páginas</p>
+            <h2 class="h-section" id="contenido-title" data-split>Lo que encontrarás<span class="caret" aria-hidden="true"></span></h2>
+          </div>
+          <p class="lead muted">Siete temas que la universidad no enseña y que deciden si una oficina sobrevive. Cada uno remite al capítulo donde se desarrolla.</p>
+        </div>
+      </div>
+      <div class="wrap findings__viewport">
+        <ul class="findings__track" role="list" data-findings-track>
+          {FINDINGS.map((f) => {
+            const ch = CHAPTERS.find((c) => c.n === f.ch)!;
+            return (
+              <li>
+                <a class="card" href={`/capitulos/${ch.slug}`} data-card>
+                  <span class="card__corner card__corner--tl" aria-hidden="true"></span>
+                  <span class="card__corner card__corner--br" aria-hidden="true"></span>
+                  <span class="card__top"><b>{f.k}</b><span>Cap. {chapterNum(f.ch)}</span></span>
+                  <svg class="card__glyph" viewBox="0 0 200 120" aria-hidden="true" preserveAspectRatio="xMidYMid meet" set:html={glyphs[f.k]} />
+                  <h3>{f.t}</h3>
+                  <p>{f.d}</p>
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+        <div class="findings__progress" aria-hidden="true"><i data-findings-progress></i></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ESCALERA 0 → 100 --------------------------------------------------- -->
+  <section class="section ladder" id="escalera" aria-labelledby="escalera-title" data-ladder>
+    <div class="ladder__pin">
+      <div class="wrap">
+        <div class="ladder__head">
+          <div>
+            <p class="eyebrow">Nuevo en esta edición · Cap. 17</p>
+            <h2 class="h-section" id="escalera-title">Facturar <span class="light">no es</span> ganar</h2>
+          </div>
+          <p class="lead muted">El orden financiero se construye por escalones que no se pueden saltar. ¿En cuál está tu oficina?</p>
+        </div>
+        <div class="ladder__grid">
+          <ol class="ladder__levels" data-ladder-levels>
+            {LADDER.map((l) => (
+              <li class="ladder__level" data-level={l.level}>
+                <b>{String(l.level).padStart(3, '0')}</b>
+                <div><h3>{l.title}</h3><p>{l.d}</p></div>
+              </li>
+            ))}
+          </ol>
+          <div class="ladder__visual" data-ladder-visual>
+            <div class="ladder__readout" aria-hidden="true"><span data-ladder-readout>000</span><span class="caret"></span></div>
+            <svg class="ladder__svg" viewBox="0 0 520 440" role="img" aria-label="Escalera financiera de cinco niveles: 0, 25, 50, 75 y 100" data-ladder-svg>
+              {bars.map((b) => (
+                <g class="bar" data-bar={b.level}>
+                  <polygon class="face-l" points={b.left} />
+                  <polygon class="face-r" points={b.right} />
+                  <polygon class="face-top" points={b.top} />
+                  <polygon class="edge" points={b.left} />
+                  <polygon class="edge" points={b.right} />
+                  <polygon class="edge" points={b.top} />
+                </g>
+              ))}
+              {bars.map((b) => <text x={b.lx} y={b.ly} text-anchor="middle">{b.level}</text>)}
+            </svg>
+            <p class="ladder__src">Ilustración basada en «La escalera financiera de 0 a 100», capítulo 17, por Davidsson Gonzalez.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COTAS ------------------------------------------------------------ -->
+  <section class="section" aria-labelledby="cifras-title">
+    <div class="wrap">
+      <h2 class="sr-only" id="cifras-title">El libro en cifras</h2>
+      <ul class="dims" role="list">
+        {STATS.map((s) => (
+          <li class="dim" data-dim>
+            <div class="dim__line" aria-hidden="true"><i></i></div>
+            <p class="dim__value"><span data-count={s.value}>{s.value.toLocaleString('es-CO')}</span>{s.suffix}</p>
+            <p class="dim__label">{s.label}</p>
+            <p class="dim__note">{s.note}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- ÍNDICE (papel) -------------------------------------------------- -->
+  <section class="section toc-section" id="indice" aria-labelledby="indice-title" data-paper>
+    <div class="wrap">
+      <div class="section-head section-head--split">
+        <div>
+          <p class="eyebrow">Abre el libro</p>
+          <h2 class="h-section toc__title" id="indice-title" data-split>Índice<span class="caret" aria-hidden="true"></span></h2>
+        </div>
+        <p class="lead muted" data-reveal>Diecinueve capítulos ordenados como se construye una oficina: primero la cabeza, luego la empresa, después el cliente y al final el dinero.</p>
+      </div>
+      <ChapterList chapters={CHAPTERS} />
+    </div>
+  </section>
+
+  <!-- AUTOR ------------------------------------------------------------ -->
+  <section class="section" id="autor" aria-labelledby="autor-title" data-dark>
+    <div class="wrap author__grid">
+      <figure class="author__figure" data-author-figure>
+        <Image src={authorImg} alt={`Retrato de ${BOOK.author} con casco de obra`} widths={[420, 640, 900]} sizes="(min-width: 1024px) 40vw, 92vw" format="webp" quality={78} />
+        <svg class="author__frame" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><rect x="0.5" y="0.5" width="99" height="99" data-author-frame /></svg>
+        <figcaption class="author__caption"><span>Pereira, Colombia</span><span>UVA Arquitectura · 2016</span></figcaption>
+      </figure>
+      <div>
+        <p class="eyebrow">Sobre el autor</p>
+        <h2 class="author__name" id="autor-title" data-split>{BOOK.author}</h2>
+        <p class="author__role">{BOOK.authorRole}</p>
+        <div class="author__bio">
+          {AUTHOR_BIO.map((p) => <p data-reveal>{p}</p>)}
+        </div>
+        <blockquote class="author__quote" data-reveal>«{BOOK.motto}»</blockquote>
+        <ul class="people" role="list" aria-label="Colaboradores del libro">
+          {PEOPLE.map((p) => <li data-reveal><b>{p.name}</b><span>{p.role} — {p.org}</span></li>)}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRÓLOGO --------------------------------------------------------- -->
+  <section class="section prologue" aria-label="Fragmento del prólogo">
+    <div class="wrap">
+      <p class="eyebrow">Del prólogo</p>
+      <figure>
+        <blockquote data-split-lines>Este libro es un recordatorio de que, como arquitectos, hacemos realidad los sueños.</blockquote>
+        <figcaption data-reveal><b>Arq. Luis Felipe Cuartas Correa</b> · Director general, ESA Arquitectura</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- CURSO INCLUIDO --------------------------------------------------- -->
+  <section class="section" id="curso" aria-labelledby="curso-title">
+    <div class="wrap course">
+      <div>
+        <p class="eyebrow">Bonus con tu ejemplar</p>
+        <h2 class="h-section" id="curso-title" data-split>Un curso <span class="light">incluido</span></h2>
+        <p class="lead muted" data-reveal>Dentro del libro hay un código QR. Escanéalo, regístrate con tu correo y empieza a tu ritmo, sin costo.</p>
+      </div>
+      <div class="course__box" data-course>
+        <div class="course__head">Incluye acceso gratuito</div>
+        <div class="course__body">
+          <h3>Curso de Redes Sociales, Mercadeo e Instagram para Arquitectos</h3>
+          <span class="tag">UVA Academia</span>
+          <small>Escanea el QR en el interior del libro</small>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FICHA ------------------------------------------------------------ -->
+  <section class="section" id="ficha" aria-labelledby="ficha-title">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Ficha técnica</p>
+        <h2 class="h-section" id="ficha-title" data-split>El objeto<span class="caret" aria-hidden="true"></span></h2>
+      </div>
+      <dl class="titleblock" data-reveal>
+        <div class="wide"><dt>Título</dt><dd>{BOOK.title}</dd></div>
+        <div class="wide"><dt>Autor</dt><dd>{BOOK.author}</dd></div>
+        <div><dt>Colección</dt><dd>{BOOK.collection} · {BOOK.volume}</dd></div>
+        <div><dt>Edición</dt><dd>{BOOK.edition}</dd></div>
+        <div><dt>Editorial</dt><dd>{BOOK.publisher}</dd></div>
+        <div><dt>Páginas</dt><dd>{BOOK.pages}</dd></div>
+        <div><dt>Formato</dt><dd>{BOOK.format}</dd></div>
+        <div><dt>Medidas</dt><dd>{BOOK.size}</dd></div>
+        <div><dt>ISBN</dt><dd>{BOOK.isbn ?? 'Por asignar'}</dd></div>
+        <div><dt>Impreso en</dt><dd>Colombia</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- PREGUNTAS -------------------------------------------------------- -->
+  <section class="section" id="preguntas" aria-labelledby="preguntas-title">
+    <div class="wrap">
+      <div class="section-head section-head--split">
+        <div>
+          <p class="eyebrow">Preguntas frecuentes</p>
+          <h2 class="h-section" id="preguntas-title" data-split>Antes de pedirlo</h2>
+        </div>
+        <p class="lead muted" data-reveal>¿Otra duda? Escríbenos a <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>.</p>
+      </div>
+      <div class="faq">
+        {FAQ.map((f, i) => (
+          <details name="faq" open={i === 0} data-reveal>
+            <summary>{f.q}<i aria-hidden="true"></i></summary>
+            <p>{f.a}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CIERRE ------------------------------------------------------------ -->
+  <section class="section closing" id="comprar" aria-labelledby="comprar-title">
+    <div class="wrap">
+      <p class="eyebrow">Tu ejemplar</p>
+      <h2 class="closing__title" id="comprar-title" data-split>Hay un antes <span class="light">y un después<span class="caret" aria-hidden="true"></span></span></h2>
+      <p class="lead muted closing__lead" data-reveal>Escrito para arquitectos, diseñadores, constructores y estudiantes que quieren dejar de trabajar para sobrevivir y empezar a vivir de su profesión.</p>
+      <div class="closing__ctas" data-reveal>
+        <a class="btn" href={whatsappLink()} target="_blank" rel="noopener" data-magnetic>Pedir por WhatsApp <Arrow /></a>
+        <a class="btn btn--ghost" href={`mailto:${CONTACT.email}?subject=${encodeURIComponent('Libro Vendiendo arquitectura de 0 a 100')}`}>Escribir un correo</a>
+      </div>
+    </div>
+    <div class="marquee" aria-hidden="true">
+      {[0, 1].map(() => (
+        <div class="marquee__track">
+          <span>Lo que nunca nadie nos contó <b>_</b></span>
+          <span>Vendiendo arquitectura de 0 a 100 <b>_</b></span>
+          <span>Arquitectura Disruptiva · Tomo 01 <b>_</b></span>
+        </div>
+      ))}
+    </div>
+  </section>
+</Base>

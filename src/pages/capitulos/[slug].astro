@@ -1,0 +1,102 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Base from '../../layouts/Base.astro';
+import Arrow from '../../components/Arrow.astro';
+import { CHAPTERS, BOOK, chapterNum, type Chapter } from '../../data/book';
+import { whatsappLink } from '../../config/site';
+
+export const getStaticPaths = (() =>
+  CHAPTERS.map((c, i) => ({
+    params: { slug: c.slug },
+    props: { chapter: c, prev: CHAPTERS[i - 1] ?? null, next: CHAPTERS[i + 1] ?? null },
+  }))) satisfies GetStaticPaths;
+
+interface Props { chapter: Chapter; prev: Chapter | null; next: Chapter | null }
+const { chapter: c, prev, next } = Astro.props;
+
+const site = Astro.site!;
+const url = (p: string) => new URL(p, site).href;
+const path = `/capitulos/${c.slug}`;
+const title = `Capítulo ${c.n}: ${c.title}`;
+const description = `${c.summary} Capítulo ${c.n} del libro «${BOOK.title}» de ${BOOK.author}.`.slice(0, 300);
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Chapter',
+    '@id': url(`${path}#capitulo`),
+    name: c.title,
+    position: c.n,
+    pageStart: c.page,
+    description: c.summary,
+    inLanguage: 'es',
+    url: url(path),
+    isPartOf: { '@id': url('/#libro') },
+    author: c.byline ? { '@type': 'Person', name: c.byline.replace('Por ', '') } : { '@id': url('/#autor') },
+    keywords: c.ideas.join(', '),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Inicio', item: url('/') },
+      { '@type': 'ListItem', position: 2, name: 'Capítulos', item: url('/capitulos') },
+      { '@type': 'ListItem', position: 3, name: `Capítulo ${c.n}`, item: url(path) },
+    ],
+  },
+];
+const wa = whatsappLink(`Hola, me interesa el libro «${BOOK.title}», en especial el capítulo ${c.n}: ${c.title}.`);
+---
+
+<Base title={title} description={description} path={path} ogType="article" schema={schema} paper>
+  <section class="ch-hero">
+    <div class="wrap">
+      <nav aria-label="Ruta de navegación">
+        <ol class="crumbs">
+          <li><a href="/">Inicio</a></li>
+          <li><a href="/capitulos">Capítulos</a></li>
+          <li aria-current="page">Capítulo {c.n}</li>
+        </ol>
+      </nav>
+      <header class="ch-block" data-ch-block>
+        <p class="ch-block__kicker">{c.isNew ? 'Nuevo en esta edición · Capítulo' : 'Capítulo'}</p>
+        <p class="ch-block__num" aria-hidden="true">{chapterNum(c.n)}</p>
+        <div class="ch-block__rule"></div>
+        <h1>{c.title}</h1>
+        {c.byline && <p class="ch-block__by">{c.byline}</p>}
+      </header>
+    </div>
+  </section>
+
+  <section class="section ch-section">
+    <div class="wrap ch-body">
+      <div>
+        <p class="eyebrow">De qué trata · p. {c.page}</p>
+        <p class="lead ch-lead" data-reveal>{c.summary}</p>
+        <p class="ch-note" data-reveal>
+          Este es un resumen editorial. El desarrollo completo, con ejemplos y modelos de la oficina del autor, está en el libro impreso.
+        </p>
+        <div class="hero__ctas" data-reveal>
+          <a class="btn" href={wa} target="_blank" rel="noopener" data-magnetic>Quiero el libro <Arrow /></a>
+          <a class="btn btn--ghost" href="/#indice">Volver al índice</a>
+        </div>
+      </div>
+      <div>
+        <h2 class="eyebrow eyebrow--plain ideas__title">Ideas clave</h2>
+        <ul class="ideas">
+          {c.ideas.map((i) => <li data-reveal>{i}</li>)}
+        </ul>
+      </div>
+    </div>
+    <div class="wrap">
+      <nav class="pager" aria-label="Capítulos vecinos">
+        {prev ? (
+          <a href={`/capitulos/${prev.slug}`} rel="prev"><small>← Capítulo {chapterNum(prev.n)}</small><b>{prev.title}</b></a>
+        ) : <span></span>}
+        {next && (
+          <a class="next" href={`/capitulos/${next.slug}`} rel="next"><small>Capítulo {chapterNum(next.n)} →</small><b>{next.title}</b></a>
+        )}
+      </nav>
+    </div>
+  </section>
+</Base>

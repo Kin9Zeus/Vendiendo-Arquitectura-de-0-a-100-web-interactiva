@@ -1,0 +1,40 @@
+---
+import { CONTACT, whatsappLink } from '../config/site';
+import { BOOK } from '../data/book';
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__grid">
+      <div>
+        <span class="logo-mask" aria-hidden="true"></span>
+        <p class="serif muted footer__motto">
+          {BOOK.collection} · {BOOK.volume}. «{BOOK.motto}»
+        </p>
+      </div>
+      <nav aria-label="Pie de página">
+        <h2>El libro</h2>
+        <ul>
+          <li><a href="/#contenido">Lo que encontrarás</a></li>
+          <li><a href="/capitulos">Índice de capítulos</a></li>
+          <li><a href="/#autor">Sobre el autor</a></li>
+          <li><a href="/#preguntas">Preguntas frecuentes</a></li>
+        </ul>
+      </nav>
+      <div>
+        <h2>Contacto</h2>
+        <ul>
+          <li><a href={whatsappLink()} target="_blank" rel="noopener">WhatsApp</a></li>
+          <li><a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a></li>
+          <li><a href={CONTACT.instagram} target="_blank" rel="noopener">Instagram {CONTACT.instagramHandle}</a></li>
+          <li><a href={CONTACT.web} target="_blank" rel="noopener">UVA Arquitectura</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__legal">
+      <span>© {year} {BOOK.author} · Unidad Vectorial de Arquitectura S.A.S. Todos los derechos reservados.</span>
+      <span><a href="/privacidad">Aviso de privacidad</a> · Hecho en Pereira, Colombia</span>
+    </div>
+  </div>
+</footer>
