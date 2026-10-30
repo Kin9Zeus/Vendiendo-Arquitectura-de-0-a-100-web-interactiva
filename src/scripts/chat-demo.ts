@@ -75,7 +75,7 @@ export function demoAnswer(question: string): DemoAnswer {
   }
   const [main, second] = found;
   const lines = [
-    `**Capítulo ${num(main.n)} · ${main.title}.** ${main.summary}`,
+    `**Capítulo ${num(main.n)} · ${main.title}${/[?!.]$/.test(main.title) ? '' : '.'}** ${main.summary}`,
     '',
     'Ideas clave del capítulo:',
     ...main.ideas.map((i) => `- ${i}`),
