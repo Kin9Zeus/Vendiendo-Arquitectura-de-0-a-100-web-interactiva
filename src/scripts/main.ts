@@ -229,13 +229,37 @@ function initManifesto(desktop: boolean) {
   if (!sec || !text) return;
   const split = SplitText.create(text, { type: 'words', wordsClass: 'w' });
   const book = $('#manifesto-book');
-  const tl = gsap.timeline({
-    scrollTrigger: desktop
-      ? { trigger: sec, start: 'top top', end: '+=160%', pin: '.manifesto__pin', scrub: 0.7, anticipatePin: 1 }
-      : { trigger: text, start: 'top 80%', end: 'bottom 40%', scrub: 0.6 },
-  });
-  tl.to(split.words, { opacity: 1, stagger: 0.08, ease: 'none', duration: 0.6 }, 0);
-  if (book) tl.fromTo(book, { rotationY: -18 }, { rotationY: 162, ease: 'none', duration: tl.duration() }, 0);
+
+  /** Giro en tres tiempos: se ve la portada, gira, y se queda mostrando la contraportada. */
+  const flip = (tl: gsap.core.Timeline, at: number, total: number) => {
+    if (!book) return;
+    tl.set(book, { rotationY: -18 }, at)
+      .to(book, { rotationY: -18, duration: total * 0.22, ease: 'none' }, at)                  // portada
+      .to(book, { rotationY: 162, duration: total * 0.56, ease: 'power1.inOut' }, at + total * 0.22) // giro
+      .to(book, { rotationY: 162, duration: total * 0.22, ease: 'none' }, at + total * 0.78);   // contraportada
+  };
+
+  if (desktop) {
+    // Sección fijada: el texto se enciende y el libro gira con el mismo recorrido, más largo para disfrutarlo
+    const tl = gsap.timeline({
+      scrollTrigger: { trigger: sec, start: 'top top', end: '+=240%', pin: '.manifesto__pin', scrub: 0.8, anticipatePin: 1 },
+    });
+    tl.to(split.words, { opacity: 1, stagger: 0.08, ease: 'none', duration: 0.6 }, 0);
+    const total = Math.max(tl.duration(), 1) * 1.1;
+    flip(tl, 0, total);
+  } else {
+    // Sin fijar (móvil, tablet, portátil con zoom): cada elemento anima mientras está a la vista
+    gsap.to(split.words, {
+      opacity: 1, stagger: 0.08, ease: 'none', duration: 0.6,
+      scrollTrigger: { trigger: text, start: 'top 85%', end: 'bottom 45%', scrub: 0.6 },
+    });
+    if (book) {
+      const tl = gsap.timeline({
+        scrollTrigger: { trigger: book.closest('[data-book-stage]') ?? book, start: 'top 85%', end: 'bottom 15%', scrub: 0.8 },
+      });
+      flip(tl, 0, 1);
+    }
+  }
   return () => split.revert();
 }
 
@@ -286,7 +310,7 @@ function initLadder(desktop: boolean) {
     defaults: { ease: 'none' },
     scrollTrigger: desktop
       ? { trigger: sec, start: 'top top', end: '+=220%', pin: '.ladder__pin', scrub: 0.6, anticipatePin: 1 }
-      : { trigger: $('[data-ladder-visual]', sec) ?? sec, start: 'top 75%', end: 'bottom 35%', scrub: 0.6 },
+      : { trigger: $('[data-ladder-visual]', sec) ?? sec, start: 'top 75%', end: 'bottom 55%', scrub: 0.6 },
   });
   const sync = () => {
     if (readout) readout.textContent = pad3(Math.max(0, state.v));
@@ -395,7 +419,7 @@ function initSplits() {
       autoSplit: true,
       onSplit: (self) => gsap.fromTo(self.lines, { opacity: 0.12 }, {
         opacity: 1, stagger: 0.3, ease: 'none',
-        scrollTrigger: { trigger: el, start: 'top 80%', end: 'bottom 50%', scrub: 0.5 },
+        scrollTrigger: { trigger: el, start: 'top 85%', end: 'bottom 30%', scrub: 0.5 },
       }),
     });
   });

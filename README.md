@@ -65,7 +65,7 @@ Toda decisión visual sale del libro impreso, no de una plantilla:
 |---|---|---|
 | 0 | **Precarga** | Un contador recorre `000 → 100_` y la cortina se levanta (solo al llegar desde fuera del sitio). |
 | 1 | **Portada** | El título sube línea a línea, el círculo de la cubierta se dibuja y el libro entra en 3D; después sigue al puntero. |
-| 2 | **Contraportada** | La sección se fija; las palabras del texto de contracubierta se encienden una a una mientras el libro gira 180° y muestra su reverso. |
+| 2 | **Contraportada** | La sección se fija; las palabras del texto de contracubierta se encienden una a una y el libro gira en tres tiempos: muestra la portada, gira 180° y se queda en la contraportada. |
 | 3 | **Lo que encontrarás** | Scroll horizontal: siete tarjetas de plano cuyos dibujos se trazan al entrar, cada una enlazada a su capítulo. |
 | 4 | **Facturar no es ganar** | La «escalera financiera de 0 a 100» del capítulo 17: cinco volúmenes isométricos crecen con el scroll y la lectura sube de 000 a 100. |
 | 5 | **Cifras** | Líneas de cota que se trazan y números que cuentan. |
@@ -216,6 +216,7 @@ El repositorio incluye `Dockerfile` y `railway.json` (healthcheck en `/healthz`)
 
 | Versión | Fecha | Cambios |
 |---|---|---|
+| **1.1.4** | Oct 2026 | Ritmo de las animaciones de scroll: el libro de la contraportada se ve de frente, gira y se detiene en el reverso; en pantallas sin fijado cada animación ocurre mientras está a la vista. |
 | **1.1.3** | Oct 2026 | Animaciones visibles en todos los dispositivos, también cuando el sistema tiene activada la opción de reducir movimiento. |
 | **1.1.2** | Oct 2026 | Modo demostración del asistente: cuando la IA no está disponible, el chat sigue permitiendo escribir y usar las sugerencias, con respuestas basadas en el índice del libro. |
 | **1.1.1** | Oct 2026 | Vista previa pública en GitHub Pages con despliegue automático, rutas compatibles con subcarpeta y ajuste del menú en escritorio estrecho. |
