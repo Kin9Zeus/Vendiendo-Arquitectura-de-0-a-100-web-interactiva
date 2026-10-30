@@ -218,6 +218,7 @@ El repositorio incluye `Dockerfile` y `railway.json` (healthcheck en `/healthz`)
 
 | Versión | Fecha | Cambios |
 |---|---|---|
+| **1.1.7** | Oct 2026 | Base de conocimiento con búsqueda semántica (embeddings) y evaluación con la IA real: 18/18 casos entre preguntas del libro, temas ajenos e intentos de manipulación; construcción de la base tolerante a límites y cortes de red. |
 | **1.1.6** | Oct 2026 | Si la API de IA rechaza la clave o se agotan sus créditos, el chat pasa a modo demostración sin mostrar errores; script de evaluación del asistente con la IA real. |
 | **1.1.5** | Oct 2026 | Secciones fijadas que caben en cualquier altura de pantalla: nueva composición de «Facturar no es ganar», tarjetas proporcionales y ajuste automático; coordenadas del cursor sin decimales. |
 | **1.1.4** | Oct 2026 | Ritmo de las animaciones de scroll: el libro de la contraportada se ve de frente, gira y se detiene en el reverso; en pantallas sin fijado cada animación ocurre mientras está a la vista. |

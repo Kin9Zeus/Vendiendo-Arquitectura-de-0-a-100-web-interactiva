@@ -72,22 +72,38 @@ export async function embedQuery(cfg, text, parentSignal, dims = 768) {
 }
 
 /** Embeddings por lotes para construir la base (se usa en scripts/kb-build.mjs). */
-export async function embedDocuments(cfg, items, dims = 768) {
+export async function embedDocuments(cfg, items, dims = 768, batchSize = 32) {
   const out = [];
-  for (let i = 0; i < items.length; i += 64) {
-    const batch = items.slice(i, i + 64);
-    const res = await post(cfg, `models/${cfg.embedModel}:batchEmbedContents`, {
-      requests: batch.map((it) => ({
-        model: `models/${cfg.embedModel}`,
-        content: { parts: [{ text: it.text }] },
-        taskType: 'RETRIEVAL_DOCUMENT',
-        title: it.title,
-        outputDimensionality: dims,
-      })),
-    }, AbortSignal.timeout(60_000));
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+  for (let i = 0; i < items.length; i += batchSize) {
+    const batch = items.slice(i, i + batchSize);
+    let res;
+    // Los planes gratuitos limitan los embeddings por minuto: se espera y reintenta ante un 429
+    for (let attempt = 0; ; attempt++) {
+      try {
+        res = await post(cfg, `models/${cfg.embedModel}:batchEmbedContents`, {
+          requests: batch.map((it) => ({
+            model: `models/${cfg.embedModel}`,
+            content: { parts: [{ text: it.text }] },
+            taskType: 'RETRIEVAL_DOCUMENT',
+            title: it.title,
+            outputDimensionality: dims,
+          })),
+        }, AbortSignal.timeout(60_000));
+        break;
+      } catch (err) {
+        const network = !(err instanceof UpstreamError); // corte de red o tiempo agotado
+        const transient = network || err.status === 429 || err.status === 403 || err.status >= 500;
+        if (!transient || attempt >= 8) throw err;
+        const wait = 15_000 * (attempt + 1);
+        process.stdout.write(`  la API pidió esperar (${network ? 'red' : err.status}): reintento en ${wait / 1000} s…\n`);
+        await sleep(wait);
+      }
+    }
     const json = await res.json();
     for (const e of json.embeddings || []) out.push(l2(e.values));
-    process.stdout.write(`  embeddings ${Math.min(i + 64, items.length)}/${items.length}\r`);
+    process.stdout.write(`  embeddings ${Math.min(i + batchSize, items.length)}/${items.length}\n`);
+    if (i + batchSize < items.length) await sleep(Number(process.env.KB_EMBED_PAUSE_MS ?? 12_000)); // ritmo del plan gratuito
   }
   if (out.length !== items.length) throw new Error('La API devolvió un número inesperado de embeddings');
   return out;
