@@ -160,12 +160,18 @@ export function createChat(env = process.env, deps = {}) {
       refund = true;
       outcome = abort.signal.aborted ? 'aborted' : 'error';
       if (!abort.signal.aborted) {
-        const quota = err instanceof UpstreamError && err.status === 429;
-        if (err instanceof UpstreamError && !quota) console.error(`chat upstream ${err.status}: ${String(err.detail).slice(0, 200)}`);
-        send('error', {
-          code: quota ? 'upstream_busy' : 'upstream',
-          message: quota ? 'El servicio de IA está saturado. Inténtalo en un minuto.' : 'No pude generar la respuesta. Inténtalo de nuevo.',
-        });
+        const status = err instanceof UpstreamError ? err.status : 0;
+        const quota = status === 429 && !/depleted|billing/i.test(String(err.detail));
+        // 401/403: clave inválida o sin permiso · 402: créditos de prepago agotados o facturación inactiva
+        const unavailable = status === 401 || status === 402 || status === 403 || /depleted|billing/i.test(String(err?.detail));
+        if (unavailable) console.error(`chat: la API de Gemini rechazó la clave o la facturación (${status}). Revisa créditos y facturación en Google AI Studio.`);
+        else if (err instanceof UpstreamError && !quota) console.error(`chat upstream ${status}: ${String(err.detail).slice(0, 200)}`);
+        send('error', unavailable
+          ? { code: 'service_unavailable', message: 'El asistente con IA no está disponible en este momento.' }
+          : {
+            code: quota ? 'upstream_busy' : 'upstream',
+            message: quota ? 'El servicio de IA está saturado. Inténtalo en un minuto.' : 'No pude generar la respuesta. Inténtalo de nuevo.',
+          });
       }
     } finally {
       clearInterval(heartbeat);

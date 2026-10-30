@@ -106,7 +106,7 @@ Un asistente conversacional integrado en el sitio que **solo responde sobre el c
 | Uso justo | Límite diario por visitante, por IP y por minuto; tope global de mensajes y tokens; una respuesta a la vez; interruptor de apagado. |
 | Privacidad por diseño | Correos y teléfonos se ocultan antes de llegar a la IA; contadores con seudónimos HMAC que rotan cada día; registros sin contenido ni IP. |
 
-**Modo demostración:** si la IA no está disponible (vista previa estática, desarrollo sin clave o servicio apagado), el chat no se bloquea: responde sin IA con el índice, los resúmenes y las ideas clave de cada capítulo, y lo indica con claridad.
+**Modo demostración:** si la IA no está disponible (vista previa estática, desarrollo sin clave, servicio apagado o créditos agotados en la API), el chat no se bloquea: responde sin IA con el índice, los resúmenes y las ideas clave de cada capítulo, y lo indica con claridad.
 
 **Contenido protegido:** el repositorio es público, así que la base de conocimiento del libro se guarda cifrada con **AES-256-GCM** (`server/data/kb.enc`) y solo se descifra en memoria en el servidor con una clave de entorno.
 
@@ -190,6 +190,7 @@ npm run dev        # http://localhost:4321
 npm run build      # build estático + brotli/gzip
 npm start          # servidor de producción en $PORT (8080)
 npm test           # pruebas del asistente
+node scripts/chat-eval.mjs   # evaluación con la IA real: temas del libro, temas ajenos y ataques
 npm run kb:build   # reconstruye la base cifrada (requiere el PDF original, no incluido)
 ```
 
@@ -217,6 +218,7 @@ El repositorio incluye `Dockerfile` y `railway.json` (healthcheck en `/healthz`)
 
 | Versión | Fecha | Cambios |
 |---|---|---|
+| **1.1.6** | Oct 2026 | Si la API de IA rechaza la clave o se agotan sus créditos, el chat pasa a modo demostración sin mostrar errores; script de evaluación del asistente con la IA real. |
 | **1.1.5** | Oct 2026 | Secciones fijadas que caben en cualquier altura de pantalla: nueva composición de «Facturar no es ganar», tarjetas proporcionales y ajuste automático; coordenadas del cursor sin decimales. |
 | **1.1.4** | Oct 2026 | Ritmo de las animaciones de scroll: el libro de la contraportada se ve de frente, gira y se detiene en el reverso; en pantallas sin fijado cada animación ocurre mientras está a la vista. |
 | **1.1.3** | Oct 2026 | Animaciones visibles en todos los dispositivos, también cuando el sistema tiene activada la opción de reducir movimiento. |

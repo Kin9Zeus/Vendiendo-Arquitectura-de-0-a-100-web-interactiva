@@ -27,6 +27,7 @@ before(async () => {
     req.on('end', () => {
       mockCalls.push({ url: req.url, key: req.headers['x-goog-api-key'], body: JSON.parse(body || '{}') });
       if (mockMode === 'fail') { res.writeHead(500); res.end('{"error":"boom"}'); return; }
+      if (mockMode === 'nocredit') { res.writeHead(402); res.end('{"error":{"message":"Your prepayment credits are depleted."}}'); return; }
       res.writeHead(200, { 'Content-Type': 'text/event-stream' });
       const evt = (o) => res.write(`data: ${JSON.stringify(o)}\r\n\r\n`);
       evt({ candidates: [{ content: { parts: [{ text: 'pensando…', thought: true }] } }] });
@@ -138,6 +139,15 @@ test('falla de la IA: evento de error y el mensaje no se descuenta', async () =>
   assert.equal(ev.at(-1).event, 'error');
   const s = await (await fetch(`${base}/api/chat/status`, { headers: { 'X-Real-IP': '5.5.5.5', 'User-Agent': 'test' } })).json();
   assert.equal(s.remaining, 4);
+});
+
+test('créditos agotados: aviso de servicio no disponible (el navegador pasa a modo demostración)', async () => {
+  mockMode = 'nocredit';
+  const ev = await events(await post({ sid: SID, message: '¿Qué dice del capítulo 6?' }, { 'X-Real-IP': '3.3.3.3' }));
+  mockMode = 'ok';
+  const err = ev.find((e) => e.event === 'error');
+  assert.equal(err.data.code, 'service_unavailable');
+  assert.ok(!JSON.stringify(err.data).includes('prepayment'), 'no se filtra el detalle de facturación al visitante');
 });
 
 test('límite diario por visitante', async () => {

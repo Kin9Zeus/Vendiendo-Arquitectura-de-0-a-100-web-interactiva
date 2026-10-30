@@ -332,6 +332,7 @@ async function ask(question: string) {
   let answer = '';
   let sig = '';
   let sources: Source[] = [];
+  let unavailable = false;
 
   try {
     const res = await fetch(`${BASE}/api/chat`, {
@@ -377,8 +378,17 @@ async function ask(question: string) {
       } else if (event === 'done') {
         sig = data.sig || '';
       } else if (event === 'error') {
+        if (data.code === 'service_unavailable' && !answer) { unavailable = true; break; }
         throw new Error(data.message || 'No pude generar la respuesta.');
       }
+    }
+    if (unavailable) {
+      // IA sin créditos o con la facturación inactiva: se sigue en modo demostración
+      wrap.remove();
+      enterDemo('El asistente con IA no está disponible en este momento.');
+      setBusy(false);
+      await askDemo(text, false);
+      return;
     }
     if (!sig) throw new Error('La respuesta llegó incompleta. Inténtalo de nuevo.');
 
