@@ -106,6 +106,8 @@ Un asistente conversacional integrado en el sitio que **solo responde sobre el c
 | Uso justo | Límite diario por visitante, por IP y por minuto; tope global de mensajes y tokens; una respuesta a la vez; interruptor de apagado. |
 | Privacidad por diseño | Correos y teléfonos se ocultan antes de llegar a la IA; contadores con seudónimos HMAC que rotan cada día; registros sin contenido ni IP. |
 
+**Modo demostración:** si la IA no está disponible (vista previa estática, desarrollo sin clave o servicio apagado), el chat no se bloquea: responde sin IA con el índice, los resúmenes y las ideas clave de cada capítulo, y lo indica con claridad.
+
 **Contenido protegido:** el repositorio es público, así que la base de conocimiento del libro se guarda cifrada con **AES-256-GCM** (`server/data/kb.enc`) y solo se descifra en memoria en el servidor con una clave de entorno.
 
 ```
@@ -192,7 +194,7 @@ npm run kb:build   # reconstruye la base cifrada (requiere el PDF original, no i
 
 ### Vista previa en GitHub Pages
 
-Cada push a `main` ejecuta las pruebas y publica una versión estática en **[https://kin9zeus.github.io/Vendiendo-Arquitectura-de-0-a-100-web-interactiva](https://kin9zeus.github.io/Vendiendo-Arquitectura-de-0-a-100-web-interactiva/)** mediante GitHub Actions (`.github/workflows/pages.yml`). Se compila con la subcarpeta del repositorio (`BASE_PATH`) y en modo vista previa (`PUBLIC_PREVIEW=true`): no se indexa en buscadores y el asistente con IA aparece desactivado, porque Pages no ejecuta el servidor. La versión completa vive en Railway.
+Cada push a `main` ejecuta las pruebas y publica una versión estática en **[https://kin9zeus.github.io/Vendiendo-Arquitectura-de-0-a-100-web-interactiva](https://kin9zeus.github.io/Vendiendo-Arquitectura-de-0-a-100-web-interactiva/)** mediante GitHub Actions (`.github/workflows/pages.yml`). Se compila con la subcarpeta del repositorio (`BASE_PATH`) y en modo vista previa (`PUBLIC_PREVIEW=true`): no se indexa en buscadores y el asistente funciona en modo demostración (sin IA), porque Pages no ejecuta el servidor. La versión completa vive en Railway.
 
 ### Despliegue en Railway
 
@@ -214,6 +216,7 @@ El repositorio incluye `Dockerfile` y `railway.json` (healthcheck en `/healthz`)
 
 | Versión | Fecha | Cambios |
 |---|---|---|
+| **1.1.2** | Oct 2026 | Modo demostración del asistente: cuando la IA no está disponible, el chat sigue permitiendo escribir y usar las sugerencias, con respuestas basadas en el índice del libro. |
 | **1.1.1** | Oct 2026 | Vista previa pública en GitHub Pages con despliegue automático, rutas compatibles con subcarpeta y ajuste del menú en escritorio estrecho. |
 | **1.1.0** | Oct 2026 | Asistente «Pregúntale al libro» con IA (RAG sobre base cifrada, streaming, límites de uso y seguridad), políticas de privacidad, términos y cookies, sitio sin almacenamiento en el navegador y suite de pruebas. |
 | **1.0.0** | Oct 2026 | Lanzamiento: sitio completo con 23 páginas, sistema de diseño del libro, animaciones de scroll, servidor endurecido, SEO/GEO y despliegue en Railway. |

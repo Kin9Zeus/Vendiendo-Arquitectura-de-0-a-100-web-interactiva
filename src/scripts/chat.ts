@@ -6,6 +6,8 @@
  * - Cada respuesta del servidor llega firmada; se reenvía tal cual con el historial.
  */
 
+import { demoAnswer } from './chat-demo';
+
 type Turn = { role: 'user' | 'model'; text: string; sig?: string };
 type Source = { n: number; title: string; slug: string };
 
@@ -32,6 +34,7 @@ const state = {
   accepted: false,
   busy: false,
   enabled: true,
+  demo: false, // sin IA: responde con el índice y los resúmenes públicos del libro
   maxChars: 600,
   remaining: null as number | null,
   limit: 25,
@@ -211,13 +214,30 @@ function resetConversation() {
 }
 
 /* ---------------- red ---------------- */
+/**
+ * Sin IA disponible (vista previa estática, desarrollo sin clave o servicio apagado):
+ * el chat sigue siendo usable y responde con el índice y los resúmenes del libro.
+ */
+function enterDemo(reason: string) {
+  if (state.demo) return;
+  state.demo = true;
+  state.enabled = true;
+  state.accepted = true; // no se envía nada a terceros: no hace falta el consentimiento de la IA
+  state.remaining = null;
+  consent.hidden = true;
+  form.hidden = false;
+  input.disabled = false;
+  sendBtn.disabled = false;
+  dialog.classList.add('is-demo');
+  quotaEl.textContent = 'Modo demostración · sin IA';
+  notice(`${reason} Mientras tanto te respondo con el índice y las ideas clave de cada capítulo, sin inteligencia artificial.`);
+}
+
 async function refreshStatus() {
+  if (state.demo) return;
   if (dialog.dataset.preview) {
     // Vista previa estática (GitHub Pages): no hay servidor para la IA
-    state.enabled = false;
-    consent.hidden = true;
-    form.hidden = true;
-    if (!log.querySelector('.chat__msg--notice')) notice('Esta es una vista previa del sitio: el asistente con IA funciona en la versión publicada. Mientras tanto, puedes pedir el libro por WhatsApp.', true);
+    enterDemo('Esta es una vista previa del sitio: el asistente con IA funciona en la versión publicada.');
     return;
   }
   try {
@@ -234,11 +254,30 @@ async function refreshStatus() {
   }
   updateQuota();
   updateCounter();
-  if (!state.enabled) {
-    consent.hidden = true;
-    form.hidden = true;
-    if (!log.querySelector('.chat__msg--notice')) notice('El asistente no está disponible en este momento. Vuelve más tarde o escríbenos por WhatsApp.', true);
+  if (!state.enabled) enterDemo('El asistente con IA no está disponible en este momento.');
+}
+
+/** Respuesta local del modo demostración, pintada de forma progresiva. */
+async function askDemo(text: string, showQuestion = true) {
+  if (showQuestion) bubble('user', text);
+  const { wrap, body } = bubble('model');
+  wrap.classList.add('is-streaming');
+  setBusy(true);
+  const { text: answer, sources } = demoAnswer(text);
+  const instant = !document.documentElement.classList.contains('motion');
+  const parts = instant ? [answer] : answer.match(/[\s\S]{1,14}/g) || [answer];
+  let shown = '';
+  for (const part of parts) {
+    shown += part;
+    renderRich(body, shown);
+    scrollDown();
+    if (!instant) await new Promise((r) => setTimeout(r, 18));
   }
+  const row = sourcesRow(sources);
+  if (row) wrap.append(row);
+  wrap.classList.remove('is-streaming');
+  setBusy(false);
+  scrollDown();
 }
 
 async function* readSSE(res: Response) {
@@ -268,6 +307,13 @@ async function ask(question: string) {
   if (!text || state.busy || !state.enabled) return;
   if (!state.accepted) { accept.focus(); return; }
   if (text.length > state.maxChars) { notice(`Tu pregunta supera los ${state.maxChars} caracteres.`); return; }
+  if (state.demo) {
+    input.value = '';
+    updateCounter();
+    autosize();
+    await askDemo(text);
+    return;
+  }
   if (state.history.length >= MAX_TURNS) {
     lockConversation('Esta conversación llegó a su máximo. Pulsa «Nueva conversación» para seguir preguntando.');
     return;
@@ -304,6 +350,11 @@ async function ask(question: string) {
         state.remaining = 0;
         updateQuota();
         lockConversation(err.message || 'Llegaste al límite de hoy.', true);
+      } else if (res.status === 503 || err.code === 'disabled') {
+        // La IA se apagó entre la apertura y la pregunta: se responde en modo demostración
+        enterDemo('El asistente con IA no está disponible en este momento.');
+        setBusy(false);
+        await askDemo(text, false);
       } else if (err.code === 'history_tampered') {
         notice(err.message || 'La conversación no se pudo verificar.');
         resetConversation();

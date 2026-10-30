@@ -167,3 +167,6 @@ html.is-paper .chat-launch:hover { color: var(--ink); }
 .ask__open { margin-top: 2.2rem; }
 
 @media print { .chat-launch, .chat { display: none !important; } }
+
+/* modo demostración (sin IA) */
+.chat.is-demo [data-chat-quota] { color: var(--signal); font-weight: 600; }
