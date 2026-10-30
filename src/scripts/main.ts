@@ -146,7 +146,7 @@ function initCursor() {
   const ty = gsap.quickTo(xy, 'y', { duration: 0.3, ease: 'power3' });
   addEventListener('pointermove', (e) => {
     hy(e.clientY); vx(e.clientX); rx(e.clientX); ry(e.clientY); tx(e.clientX); ty(e.clientY);
-    xy.textContent = `X ${String(e.clientX).padStart(4, '0')} · Y ${String(e.clientY).padStart(4, '0')}`;
+    xy.textContent = `X ${String(Math.round(e.clientX)).padStart(4, '0')} · Y ${String(Math.round(e.clientY)).padStart(4, '0')}`;
   }, { passive: true });
   const hoverSel = 'a, button, summary, [data-card], [data-toc-row]';
   document.addEventListener('pointerover', (e) => {
@@ -219,6 +219,31 @@ function heroIntro() {
       rx(6 - ny * 14);
     });
     hero.addEventListener('pointerleave', () => { ry(-28); rx(6); });
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/**
+ * Las secciones fijadas (pin) deben caber en la altura de la ventana: si el contenido
+ * marcado con [data-fit] es más alto que el espacio libre, se reduce con `zoom`
+ * (que también ajusta el espacio que ocupa) en lugar de quedar cortado abajo.
+ */
+let fitBound = false;
+function fitPinned() {
+  const items = $$('[data-fit]');
+  for (const el of items) {
+    el.style.zoom = '';
+    if (innerWidth < 1024) continue; // sin pin: el contenido fluye con normalidad
+    const pin = el.parentElement;
+    if (!pin) continue;
+    const cs = getComputedStyle(pin);
+    const available = innerHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+    const needed = el.scrollHeight;
+    if (needed > available) el.style.zoom = String(Math.max(0.7, Math.floor((available / needed) * 1000) / 1000));
+  }
+  if (!fitBound) {
+    fitBound = true;
+    addEventListener('resize', fitPinned); // ScrollTrigger recalcula después (debounce de 200 ms)
   }
 }
 
@@ -499,6 +524,7 @@ async function boot() {
   await initPreloader();
   heroIntro();
 
+  fitPinned();
   const mm = gsap.matchMedia();
   mm.add({ desktop: '(min-width: 1024px)', mobile: '(max-width: 1023.98px)' }, (ctx) => {
     const desktop = Boolean(ctx.conditions?.desktop);
@@ -520,7 +546,7 @@ async function boot() {
   initDraw();
   initActiveLinks();
 
-  document.fonts?.ready.then(() => ScrollTrigger.refresh());
+  document.fonts?.ready.then(() => { fitPinned(); ScrollTrigger.refresh(); });
   addEventListener('load', () => ScrollTrigger.refresh(), { once: true });
 }
 

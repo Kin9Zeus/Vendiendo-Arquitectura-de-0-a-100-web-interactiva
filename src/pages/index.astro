@@ -135,7 +135,7 @@ const glyphs: Record<string, string> = {
   <!-- MANIFIESTO -------------------------------------------------------- -->
   <section class="section manifesto" id="manifiesto" aria-labelledby="manifiesto-title" data-manifesto>
     <div class="manifesto__pin">
-      <div class="wrap manifesto__grid">
+      <div class="wrap manifesto__grid" data-fit>
         <div>
           <p class="eyebrow">Contraportada</p>
           <h2 class="manifesto__title" id="manifiesto-title">Nadie nos enseñó a vender arquitectura.</h2>
@@ -189,15 +189,13 @@ const glyphs: Record<string, string> = {
   <!-- ESCALERA 0 → 100 --------------------------------------------------- -->
   <section class="section ladder" id="escalera" aria-labelledby="escalera-title" data-ladder>
     <div class="ladder__pin">
-      <div class="wrap">
-        <div class="ladder__head">
-          <div>
+      <div class="wrap" data-fit>
+        <div class="ladder__grid">
+          <div class="ladder__head">
             <p class="eyebrow">Nuevo en esta edición · Cap. 17</p>
             <h2 class="h-section" id="escalera-title">Facturar <span class="light">no es</span> ganar</h2>
+            <p class="lead muted">El orden financiero se construye por escalones que no se pueden saltar. ¿En cuál está tu oficina?</p>
           </div>
-          <p class="lead muted">El orden financiero se construye por escalones que no se pueden saltar. ¿En cuál está tu oficina?</p>
-        </div>
-        <div class="ladder__grid">
           <ol class="ladder__levels" data-ladder-levels>
             {LADDER.map((l) => (
               <li class="ladder__level" data-level={l.level}>

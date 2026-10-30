@@ -135,6 +135,7 @@ Navegador ──POST /api/chat (texto + historial firmado)──▶ Servidor Nod
 - Fuentes autoalojadas con métricas de respaldo ajustadas para evitar saltos de diseño.
 - Caché inmutable de un año para recursos con hash; HTML siempre revalidado.
 - Secciones fijadas solo en escritorio (`gsap.matchMedia`); en móvil las mismas historias se cuentan sin pin.
+- Las secciones fijadas se adaptan a la altura de la pantalla (tamaños en `vh` y ajuste automático con `zoom`), así nada queda cortado en portátiles de poca altura.
 
 ### Seguridad
 - **Content-Security-Policy con hashes SHA-256** generados en el build: sin `unsafe-inline`, sin estilos en línea, sin terceros.
@@ -216,6 +217,7 @@ El repositorio incluye `Dockerfile` y `railway.json` (healthcheck en `/healthz`)
 
 | Versión | Fecha | Cambios |
 |---|---|---|
+| **1.1.5** | Oct 2026 | Secciones fijadas que caben en cualquier altura de pantalla: nueva composición de «Facturar no es ganar», tarjetas proporcionales y ajuste automático; coordenadas del cursor sin decimales. |
 | **1.1.4** | Oct 2026 | Ritmo de las animaciones de scroll: el libro de la contraportada se ve de frente, gira y se detiene en el reverso; en pantallas sin fijado cada animación ocurre mientras está a la vista. |
 | **1.1.3** | Oct 2026 | Animaciones visibles en todos los dispositivos, también cuando el sistema tiene activada la opción de reducir movimiento. |
 | **1.1.2** | Oct 2026 | Modo demostración del asistente: cuando la IA no está disponible, el chat sigue permitiendo escribir y usar las sugerencias, con respuestas basadas en el índice del libro. |
