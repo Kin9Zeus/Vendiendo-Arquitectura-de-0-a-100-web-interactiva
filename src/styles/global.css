@@ -784,15 +784,12 @@ html.motion .ladder__level.is-on { opacity: 1; }
 /* ---------- revelados genéricos (solo con movimiento) ---------- */
 html.motion [data-reveal] { opacity: 0; transform: translateY(28px); }
 
-/* ---------- movimiento reducido ---------- */
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
-    scroll-behavior: auto !important;
-  }
-  .marquee__track { animation: none; }
+/* ---------- sin animaciones (solo con ?motion=0: capturas y pruebas) ---------- */
+html.js:not(.motion) *, html.js:not(.motion) *::before, html.js:not(.motion) *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  scroll-behavior: auto !important;
 }
 
 @view-transition { navigation: auto; }

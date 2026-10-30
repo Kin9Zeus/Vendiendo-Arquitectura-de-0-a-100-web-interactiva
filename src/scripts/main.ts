@@ -3,7 +3,7 @@
  * - Lenis (scroll suave) sincronizado con el ticker de GSAP.
  * - ScrollTrigger para pines, scrub y revelados; SplitText para tipografía.
  * - Todo el contenido es visible sin JS; las animaciones solo se montan
- *   cuando html.motion está presente (sin prefers-reduced-motion).
+ *   cuando html.motion está presente (siempre, salvo ?motion=0 para capturas).
  */
 import Lenis from 'lenis';
 import { gsap } from 'gsap';

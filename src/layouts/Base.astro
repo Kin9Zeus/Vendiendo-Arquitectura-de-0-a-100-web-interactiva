@@ -121,7 +121,9 @@ const jsonLd = JSON.stringify([...baseSchema, ...schema]).replace(/</g, '\\u003c
       (function () {
         var d = document.documentElement;
         d.classList.add('js');
-        var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches && !/[?&]motion=1/.test(location.search);
+        // Animaciones siempre activas, también con «reducir movimiento» del sistema.
+        // ?motion=0 las apaga (capturas estáticas y pruebas).
+        var reduce = /[?&]motion=0/.test(location.search);
         if (!reduce) d.classList.add('motion');
         // Sin almacenamiento: la precarga solo aparece al llegar desde fuera del sitio
         var internal = false;

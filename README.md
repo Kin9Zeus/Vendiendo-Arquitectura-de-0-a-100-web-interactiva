@@ -156,7 +156,7 @@ Navegador ──POST /api/chat (texto + historial firmado)──▶ Servidor Nod
 
 ### Accesibilidad
 - HTML semántico con *landmarks*, enlace para saltar al contenido, foco visible y navegación completa por teclado.
-- `prefers-reduced-motion` respetado: todo el contenido se ve completo sin animaciones y sin JavaScript.
+- Todo el contenido es visible sin JavaScript; las animaciones se muestran en todos los dispositivos, incluso con la opción de reducir movimiento del sistema.
 - Menú móvil con `aria-expanded`, cierre con `Esc` y gestión de foco.
 - Asistente en un `<dialog>` modal nativo con registro `aria-live`, foco gestionado y controles de 44 px.
 
@@ -216,6 +216,7 @@ El repositorio incluye `Dockerfile` y `railway.json` (healthcheck en `/healthz`)
 
 | Versión | Fecha | Cambios |
 |---|---|---|
+| **1.1.3** | Oct 2026 | Animaciones visibles en todos los dispositivos, también cuando el sistema tiene activada la opción de reducir movimiento. |
 | **1.1.2** | Oct 2026 | Modo demostración del asistente: cuando la IA no está disponible, el chat sigue permitiendo escribir y usar las sugerencias, con respuestas basadas en el índice del libro. |
 | **1.1.1** | Oct 2026 | Vista previa pública en GitHub Pages con despliegue automático, rutas compatibles con subcarpeta y ajuste del menú en escritorio estrecho. |
 | **1.1.0** | Oct 2026 | Asistente «Pregúntale al libro» con IA (RAG sobre base cifrada, streaming, límites de uso y seguridad), políticas de privacidad, términos y cookies, sitio sin almacenamiento en el navegador y suite de pruebas. |
