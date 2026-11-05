@@ -117,6 +117,21 @@ Navegador ──POST /api/chat (texto + historial firmado)──▶ Servidor Nod
                                                             └─ Gemini (SSE) ──▶ respuesta en streaming + firma
 ```
 
+## Del papel a la web — QR permanentes
+
+Al final de cada capítulo del libro impreso hay un QR que abre la página de ese capítulo con el asistente ya enfocado en él. Como el papel no se puede actualizar, los códigos están diseñados para **no romperse nunca**:
+
+| Decisión | Por qué |
+|---|---|
+| El QR apunta a un **dominio corto propio** (`q.uvalibros.com/va/06`), no a la página | La web puede rediseñarse, moverse o integrarse en un sitio de la editorial: solo cambia el destino de la redirección, nunca el papel. |
+| Código por libro y capítulo (`va` = este libro) | Futuros libros de la editorial conviven en el mismo sistema sin colisiones. |
+| Redirección **302 sin caché** | Los teléfonos no memorizan el destino, así que puede cambiar en cualquier momento. |
+| Tabla de enlaces solo aditiva (`server/qr-links.mjs`) | Una prueba automática falla si desaparece un código impreso o si su destino no responde. |
+| Tolerante a errores | Acepta mayúsculas, barras sobrantes y `va/6`; un código dañado lleva al inicio del libro, nunca a un error. |
+| Respaldo en el dominio principal | `www.uvalibros.com/q/va/06` funciona igual que el dominio corto. |
+
+`npm run qr` genera los 20 códigos (libro + 19 capítulos) en `print/qr/`: SVG vectorial para imprenta, PNG de 1200 px, índice CSV y una hoja de prueba para imprimir y escanear antes del tiraje. Corrección de errores nivel Q, versión 3 (29 × 29 módulos), legible desde 20 mm.
+
 ## Ingeniería
 
 ### Stack
@@ -177,8 +192,10 @@ src/
 └── styles/               Sistema de diseño y estilos del asistente
 server/chat/              API del asistente: recuperación, Gemini, límites, guardas
 server/data/kb.enc        Base de conocimiento cifrada
+server/qr-links.mjs       Enlaces permanentes de los QR impresos
 server.mjs                Servidor de producción
-scripts/                  Recursos, precompresión y construcción de la base
+scripts/                  Recursos, precompresión, base de conocimiento y QR
+print/qr/                 QR listos para imprenta (SVG, PNG, índice y hoja de prueba)
 test/                     Pruebas unitarias y de integración
 ```
 
@@ -189,7 +206,8 @@ npm install
 npm run dev        # http://localhost:4321
 npm run build      # build estático + brotli/gzip
 npm start          # servidor de producción en $PORT (8080)
-npm test           # pruebas del asistente
+npm test           # pruebas del asistente y de los QR
+npm run qr         # regenera los QR de imprenta en print/qr/
 node scripts/chat-eval.mjs   # evaluación con la IA real: temas del libro, temas ajenos y ataques
 npm run kb:build   # reconstruye la base cifrada (requiere el PDF original, no incluido)
 ```
@@ -200,11 +218,12 @@ Cada push a `main` ejecuta las pruebas y publica una versión estática en **[ht
 
 ### Despliegue en Railway
 
-El repositorio incluye `Dockerfile` y `railway.json` (healthcheck en `/healthz`). Variables del servicio:
+El repositorio incluye `Dockerfile` y `railway.json` (healthcheck en `/healthz`). Dominios del servicio: `www.uvalibros.com` (sitio) y `q.uvalibros.com` (QR), ambos con CNAME en GoDaddy hacia Railway; el dominio raíz `uvalibros.com` se reenvía a `www`. Variables:
 
 | Variable | Ejemplo | Uso |
 |---|---|---|
-| `SITE_URL` | `https://www.dominio.com` | Canonical, sitemap y redirección de host |
+| `SITE_URL` | `https://www.uvalibros.com` | Canonical, sitemap y redirección de host |
+| `QR_HOST` | `q.uvalibros.com` | Dominio corto de los QR impresos (mismo servicio) |
 | `ALLOW_HOSTS` | `app.up.railway.app` | Hosts de prueba que no se redirigen |
 | `NODE_ENV` | `production` | Activa HSTS y `upgrade-insecure-requests` |
 | `GEMINI_API_KEY` | — | Clave de Google AI Studio (proyecto con facturación) |
@@ -218,6 +237,7 @@ El repositorio incluye `Dockerfile` y `railway.json` (healthcheck en `/healthz`)
 
 | Versión | Fecha | Cambios |
 |---|---|---|
+| **1.2.0** | Nov 2026 | QR permanentes por capítulo para el libro impreso: dominio corto `q.uvalibros.com`, redirecciones sin caché con prueba automática, chat del capítulo al llegar desde el papel y archivos de imprenta generados. Dominio definitivo `uvalibros.com`. |
 | **1.1.7** | Oct 2026 | Base de conocimiento con búsqueda semántica (embeddings) y evaluación con la IA real: 18/18 casos entre preguntas del libro, temas ajenos e intentos de manipulación; construcción de la base tolerante a límites y cortes de red. |
 | **1.1.6** | Oct 2026 | Si la API de IA rechaza la clave o se agotan sus créditos, el chat pasa a modo demostración sin mostrar errores; script de evaluación del asistente con la IA real. |
 | **1.1.5** | Oct 2026 | Secciones fijadas que caben en cualquier altura de pantalla: nueva composición de «Facturar no es ganar», tarjetas proporcionales y ajuste automático; coordenadas del cursor sin decimales. |

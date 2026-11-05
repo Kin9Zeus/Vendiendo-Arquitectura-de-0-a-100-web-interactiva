@@ -488,6 +488,7 @@ function initDraw() {
 
 /* ------------------------------------------------------------------ */
 /** Asistente del libro: el módulo se descarga solo cuando alguien lo abre. */
+let openFromBook: (() => void) | null = null;
 function initChat() {
   if (!document.querySelector('[data-chat]')) return;
   let mod: Promise<typeof import('./chat')> | null = null;
@@ -500,6 +501,17 @@ function initChat() {
     });
     el.addEventListener('pointerenter', () => { load(); }, { once: true }); // precarga al acercarse
   });
+  // Llegada desde el QR impreso de un capítulo (?desde=qr): abre el chat de ese capítulo.
+  // Se limpia la URL para que recargar o compartir no lo vuelva a abrir.
+  const params = new URLSearchParams(location.search);
+  if (params.get('desde') === 'qr') {
+    params.delete('desde');
+    const q = params.toString();
+    history.replaceState(history.state, '', location.pathname + (q ? `?${q}` : '') + location.hash);
+    if (document.querySelector('[data-ch-block]')) {
+      openFromBook = () => load().then(({ openChat }) => openChat(undefined, { fromBook: true }));
+    }
+  }
   window.addEventListener('chat:toggle', (e) => {
     const open = (e as CustomEvent<boolean>).detail;
     if (open) lenis?.stop(); else lenis?.start();
@@ -516,6 +528,7 @@ async function boot() {
   if (!motion) {
     initPaperTheme();
     initActiveLinks();
+    openFromBook?.();
     return;
   }
 
@@ -548,6 +561,8 @@ async function boot() {
 
   document.fonts?.ready.then(() => { fitPinned(); ScrollTrigger.refresh(); });
   addEventListener('load', () => ScrollTrigger.refresh(), { once: true });
+  // Tras la entrada del capítulo, para que se vea dónde se está antes del chat
+  if (openFromBook) setTimeout(openFromBook, 900);
 }
 
 boot();

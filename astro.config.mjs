@@ -3,7 +3,7 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
 // URL pública definitiva. En Railway se define con la variable SITE_URL.
-const SITE = process.env.SITE_URL ?? 'https://www.vendiendoarquitectura.com';
+const SITE = process.env.SITE_URL ?? 'https://www.uvalibros.com';
 // Subcarpeta de publicación: «/» en producción; «/<repo>» en la vista previa de GitHub Pages.
 const BASE = process.env.BASE_PATH ?? '/';
 

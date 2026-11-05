@@ -42,7 +42,7 @@ const {
   paper = false,
 } = Astro.props;
 
-const site = Astro.site ?? new URL('https://www.vendiendoarquitectura.com');
+const site = Astro.site ?? new URL('https://www.uvalibros.com');
 const fullTitle = title ? `${title} · ${SITE.shortName}` : `${SITE.name} — ${BOOK.author} · Editorial UVA`;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const withBase = base && !path.startsWith(`${base}/`) && path !== base ? href(path) : path;

@@ -461,8 +461,19 @@ dialog.addEventListener('close', () => {
 
 renderSuggestions();
 
+/** Bienvenida para quien llega escaneando el QR al final de un capítulo impreso */
+function welcomeFromBook() {
+  const n = $('[data-ch-block]')?.dataset.chapterN;
+  const desc = $('#chat-desc', dialog);
+  if (!n || !desc) return;
+  const title = $('h1')?.textContent?.replace(/\s+/g, ' ').trim();
+  desc.textContent = `Llegaste desde el capítulo ${n} del libro impreso${title ? ` («${title}»)` : ''}. `
+    + 'Pregúntame lo que quieras sobre él: lo explico, lo conecto con el resto del libro y te ayudo a aplicarlo. Respondo solo con lo que dice el libro.';
+}
+
 /** API pública para main.ts */
-export async function openChat(question?: string) {
+export async function openChat(question?: string, opts: { fromBook?: boolean } = {}) {
+  if (opts.fromBook) welcomeFromBook();
   if (!dialog.open) {
     dialog.showModal();
     window.dispatchEvent(new CustomEvent('chat:toggle', { detail: true }));

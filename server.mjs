@@ -6,6 +6,7 @@
  *  - redirecciones canónicas (HTTPS, host, sin barra final, sin .html)
  *  - 404 personalizada y /healthz para el healthcheck
  *  - /api/chat: asistente del libro (server/chat/)
+ *  - QR impresos: q.uvalibros.com/va/NN y /q/va/NN → página del capítulo (server/qr-links.mjs)
  * Sin cookies ni sesiones persistentes; única dependencia: sirv.
  */
 import { createServer } from 'node:http';
@@ -14,18 +15,24 @@ import { fileURLToPath } from 'node:url';
 import { join, dirname } from 'node:path';
 import sirv from 'sirv';
 import { createChat } from './server/chat/handler.mjs';
+import { resolveQr, QR_HOST_DEFAULT } from './server/qr-links.mjs';
 
 const ROOT = dirname(fileURLToPath(import.meta.url));
 const DIST = join(ROOT, 'dist');
 const PORT = Number(process.env.PORT) || 8080;
 const HOST = process.env.HOST || '0.0.0.0';
 const IS_PROD = process.env.NODE_ENV === 'production';
-// Host canónico, p. ej. www.vendiendoarquitectura.com. Vacío = no forzar host.
+// Host canónico, p. ej. www.uvalibros.com. Vacío = no forzar host.
 const CANONICAL_HOST = (() => {
   try { return process.env.SITE_URL ? new URL(process.env.SITE_URL).host : ''; } catch { return ''; }
 })();
 // Hosts que pueden servir sin redirigir (dominio *.up.railway.app para pruebas).
 const ALLOW_HOSTS = (process.env.ALLOW_HOSTS || '').split(',').map((h) => h.trim()).filter(Boolean);
+// Dominio corto de los QR impresos. Apunta a este mismo servicio (o a otro que conserve qr-links.mjs).
+const QR_HOST = (process.env.QR_HOST ?? QR_HOST_DEFAULT).trim();
+const SITE_ORIGIN = (() => {
+  try { return process.env.SITE_URL ? new URL(process.env.SITE_URL).origin : ''; } catch { return ''; }
+})();
 
 if (!existsSync(join(DIST, 'index.html'))) {
   console.error('dist/ no existe. Ejecuta «npm run build» antes de «npm start».');
@@ -118,6 +125,15 @@ const server = createServer((req, res) => {
   if (url.pathname === '/healthz') {
     res.writeHead(200, { 'Content-Type': 'text/plain', 'Cache-Control': 'no-store' });
     return res.end('ok');
+  }
+
+  // QR impresos: antes del host canónico (el dominio corto no debe redirigir a sí mismo).
+  // 302 sin caché para que el destino pueda cambiar sin reimprimir.
+  const qr = resolveQr({ host: String(req.headers['x-forwarded-host'] || req.headers.host || ''), pathname: url.pathname, qrHost: QR_HOST, siteOrigin: SITE_ORIGIN });
+  if (qr) {
+    res.setHeader('X-Robots-Tag', 'noindex');
+    res.writeHead(302, { Location: qr, 'Cache-Control': 'no-store' });
+    return res.end();
   }
 
   // HTTPS y host canónico (Railway termina TLS y envía x-forwarded-proto)
