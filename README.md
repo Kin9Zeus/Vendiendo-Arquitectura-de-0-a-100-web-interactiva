@@ -248,6 +248,10 @@ El repositorio incluye `Dockerfile` y `railway.json` (healthcheck en `/healthz`)
 | **1.1.0** | Oct 2026 | Asistente «Pregúntale al libro» con IA (RAG sobre base cifrada, streaming, límites de uso y seguridad), políticas de privacidad, términos y cookies, sitio sin almacenamiento en el navegador y suite de pruebas. |
 | **1.0.0** | Oct 2026 | Lanzamiento: sitio completo con 23 páginas, sistema de diseño del libro, animaciones de scroll, servidor endurecido, SEO/GEO y despliegue en Railway. |
 
+## Licencia
+
+© 2026 Devleck (Aleck Martinez). **Todos los derechos reservados.** El código se publica como caso de estudio de portafolio: puedes leerlo y ejecutarlo en local para evaluarlo, pero no copiarlo, redistribuirlo ni usarlo en otro producto sin permiso escrito. Las marcas, logotipos, fotografías y textos pertenecen a sus respectivos dueños. Ver [LICENSE](LICENSE) · Permisos: contact@devleck.com
+
 ---
 
 <div align="center">
